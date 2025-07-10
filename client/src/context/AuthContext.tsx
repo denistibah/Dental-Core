@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, AuthContextType } from '../types';
-import { getUsers, getCurrentUser, setCurrentUser } from '../utils/storage';
+import { getUsers, getCurrentUser, setCurrentUser, saveUsers } from '../utils/storage';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,6 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  // Login logic
   const login = (email: string, password: string): boolean => {
     const users = getUsers();
     const foundUser = users.find(u => u.email === email && u.password === password);
@@ -37,6 +38,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return false;
   };
 
+  // Register logic
+  const register = (email: string, password: string, role: string): boolean => {
+    const users = getUsers();
+    
+    // Check if user already exists
+    const existingUser = users.find(u => u.email === email);
+    if (existingUser) {
+      return false; // User already exists
+    }
+
+    // Create a new user
+    // const newUser: User = { email, password, role };
+    // users.push(newUser);
+    // saveUsers(users); // Save the updated users list
+
+    // setUser(newUser);
+    // setIsAuthenticated(true);
+    // setCurrentUser(newUser);
+    return true;
+  };
+
+  // Logout logic
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -47,6 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     login,
     logout,
+    register, // Add register function to the context
     isAuthenticated
   };
 

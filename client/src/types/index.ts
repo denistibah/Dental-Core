@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  role: 'Admin' | 'Patient';
+  role: 'Student' | 'Professor';
   email: string;
   password: string;
   patientId?: string;
@@ -40,6 +40,7 @@ export interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => boolean;
   logout: () => void;
+  register: (email: string, password: string, role: 'Student' | 'Professor') => boolean; // Added register method
   isAuthenticated: boolean;
 }
 

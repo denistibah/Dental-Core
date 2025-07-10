@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Mail, Lock, User } from 'lucide-react';
+import { Heart, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link
 
@@ -8,11 +8,11 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState(''); // New state for password confirmation
-    const [role, setRole] = useState('Student'); // Default role "Student"
+    const [role, setRole] = useState<'Student' | 'Professor'>('Student'); // Explicitly type role as 'Student' | 'Professor'
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // const { register } = useAuth();
+    const { register } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -28,12 +28,12 @@ const Register: React.FC = () => {
         setLoading(true);
 
         try {
-            // const success = await register(email, password, role); // Pass role to register
-            // if (!success) {
-            //     setError('Error during registration');
-            // } else {
-            //     navigate('/login'); // Redirect to login page after successful registration
-            // }
+            const success = await register(email, password, role); // Pass role to register
+            if (!success) {
+                setError('Error during registration');
+            } else {
+                navigate('/login'); // Redirect to login page after successful registration
+            }
         } catch (err) {
             setError('An error occurred during registration');
         } finally {
@@ -52,16 +52,6 @@ const Register: React.FC = () => {
             <div className="max-w-md w-full space-y-8 relative z-10 flex flex-col items-center">
                 {/* Header */}
                 <div className="text-center">
-                    {/* <div className="flex justify-center mb-6">
-                        <div className="relative">
-                            <div className="w-20 h-20 bg-gradient-to-r from-primary-600 to-blue-700 rounded-full flex items-center justify-center shadow-xl transform transition-transform duration-300 hover:scale-110">
-                                <Heart size={40} className="text-white animate-pulse" />
-                            </div>
-                            <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
-                                <div className="w-3 h-3 bg-white rounded-full"></div>
-                            </div>
-                        </div>
-                    </div> */}
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-blue-700 bg-clip-text text-transparent mb-2">
                         Sign up to DentalCare
                     </h1>
@@ -152,7 +142,7 @@ const Register: React.FC = () => {
                                 name="role"
                                 required
                                 value={role}
-                                onChange={(e) => setRole(e.target.value)}
+                                onChange={(e) => setRole(e.target.value as 'Student' | 'Professor')} // Cast value to 'Student' | 'Professor'
                                 className="block w-full pl-4 pr-4 py-4 border border-gray-300 text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:z-10 transition-all duration-200 bg-gray-50 focus:bg-white shadow-inner"
                             >
                                 <option value="Student">Student</option>

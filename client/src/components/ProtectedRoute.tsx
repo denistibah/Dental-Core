@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles = [] })
 
   if (roles.length > 0 && !roles.includes(user.role)) {
     // Redirect based on user role
-    const redirectPath = user.role === 'Admin' ? '/dashboard' : '/patient-dashboard';
+    const redirectPath = user.role === 'Student' ? '/dashboard' : '/patient-dashboard';
     return <Navigate to={redirectPath} replace />;
   }
 

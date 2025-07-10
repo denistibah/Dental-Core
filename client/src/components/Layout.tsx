@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/my-appointments', label: 'My Appointments', icon: FileText },
   ];
 
-  const navItems = user?.role === 'Admin' ? adminNavItems : patientNavItems;
+  const navItems = user?.role === 'Student' ? adminNavItems : patientNavItems;
 
   const isActive = (path: string) => location.pathname === path;
 

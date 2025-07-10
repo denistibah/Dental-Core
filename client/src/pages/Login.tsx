@@ -16,7 +16,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const redirectPath = user.role === 'Admin' ? '/dashboard' : '/patient-dashboard';
+      const redirectPath = user.role === 'Student' ? '/dashboard' : '/patient-dashboard';
       navigate(redirectPath);
     }
   }, [isAuthenticated, user, navigate]);
