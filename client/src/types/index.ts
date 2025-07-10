@@ -22,7 +22,7 @@ export interface FileAttachment {
   size: number;
 }
 
-export interface Incident {
+export interface Appointment {
   id: string;
   patientId: string;
   title: string;
@@ -45,11 +45,11 @@ export interface AuthContextType {
 
 export interface AppContextType {
   patients: Patient[];
-  appointments: Incident[];
+  appointments: Appointment[];
   addPatient: (patient: Omit<Patient, 'id'>) => void;
   updatePatient: (id: string, patient: Partial<Patient>) => void;
   deletePatient: (id: string) => void;
-  addIncident: (appointment: Omit<Incident, 'id'>) => void;
-  updateIncident: (id: string, appointment: Partial<Incident>) => void;
-  deleteIncident: (id: string) => void;
+  addAppointment: (appointment: Omit<Appointment, 'id'>) => void;
+  updateAppointment: (id: string, appointment: Partial<Appointment>) => void;
+  deleteAppointment: (id: string) => void;
 }

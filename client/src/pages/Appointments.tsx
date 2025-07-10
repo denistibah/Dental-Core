@@ -14,16 +14,16 @@ import {
   Download,
   X
 } from 'lucide-react';
-import { Incident, FileAttachment } from '../types';
+import { Appointment, FileAttachment } from '../types';
 import { format } from 'date-fns';
 import { convertFileToBase64 } from '../utils/storage';
 
 const Appointments: React.FC = () => {
-  const { patients, appointments, addIncident, updateIncident, deleteIncident } = useApp();
+  const { patients, appointments, addAppointment, updateAppointment, deleteAppointment } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
-  const [editingIncident, setEditingIncident] = useState<Incident | null>(null);
+  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
   const [uploadingFiles, setUploadingFiles] = useState<FileAttachment[]>([]);
   const [formData, setFormData] = useState({
     patientId: '',
@@ -33,7 +33,7 @@ const Appointments: React.FC = () => {
     appointmentDate: '',
     cost: '',
     treatment: '',
-    status: 'Scheduled' as Incident['status'],
+    status: 'Scheduled' as Appointment['status'],
     nextDate: ''
   });
 
@@ -56,10 +56,10 @@ const Appointments: React.FC = () => {
       files: uploadingFiles
     };
 
-    if (editingIncident) {
-      updateIncident(editingIncident.id, appointmentData);
+    if (editingAppointment) {
+      updateAppointment(editingAppointment.id, appointmentData);
     } else {
-      addIncident(appointmentData);
+      addAppointment(appointmentData);
     }
     resetForm();
   };
@@ -77,12 +77,12 @@ const Appointments: React.FC = () => {
       nextDate: ''
     });
     setUploadingFiles([]);
-    setEditingIncident(null);
+    setEditingAppointment(null);
     setShowModal(false);
   };
 
-  const handleEdit = (appointment: Incident) => {
-    setEditingIncident(appointment);
+  const handleEdit = (appointment: Appointment) => {
+    setEditingAppointment(appointment);
     setFormData({
       patientId: appointment.patientId,
       title: appointment.title,
@@ -100,7 +100,7 @@ const Appointments: React.FC = () => {
 
   const handleDelete = (appointmentId: string) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
-      deleteIncident(appointmentId);
+      deleteAppointment(appointmentId);
     }
   };
 
@@ -319,7 +319,7 @@ const Appointments: React.FC = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">
-                {editingIncident ? 'Edit Appointment' : 'Add New Appointment'}
+                {editingAppointment ? 'Edit Appointment' : 'Add New Appointment'}
               </h3>
               <button
                 onClick={resetForm}
@@ -356,7 +356,7 @@ const Appointments: React.FC = () => {
                   </label>
                   <select
                     value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value as Incident['status'] })}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as Appointment['status'] })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
                     <option value="Scheduled">Scheduled</option>
@@ -521,7 +521,7 @@ const Appointments: React.FC = () => {
                   type="submit"
                   className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                 >
-                  {editingIncident ? 'Update' : 'Add'} Appointment
+                  {editingAppointment ? 'Update' : 'Add'} Appointment
                 </button>
               </div>
             </form>

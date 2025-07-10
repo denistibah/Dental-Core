@@ -1,4 +1,4 @@
-import { User, Patient, Incident } from '../types';
+import { User, Patient, Appointment } from '../types';
 
 // Mock data
 export const mockUsers: User[] = [
@@ -34,7 +34,7 @@ export const mockPatients: Patient[] = [
   }
 ];
 
-export const mockAppointments: Incident[] = [
+export const mockAppointments: Appointment[] = [
   {
     id: "i1",
     patientId: "p1",
@@ -121,13 +121,13 @@ export const savePatients = (patients: Patient[]) => {
   localStorage.setItem(STORAGE_KEYS.PATIENTS, JSON.stringify(patients));
 };
 
-// Incident operations
-export const getAppointments = (): Incident[] => {
+// Appointment operations
+export const getAppointments = (): Appointment[] => {
   const appointments = localStorage.getItem(STORAGE_KEYS.INCIDENTS);
   return appointments ? JSON.parse(appointments) : [];
 };
 
-export const saveAppointments = (appointments: Incident[]) => {
+export const saveAppointments = (appointments: Appointment[]) => {
   localStorage.setItem(STORAGE_KEYS.INCIDENTS, JSON.stringify(appointments));
 };
 

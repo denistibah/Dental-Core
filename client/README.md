@@ -144,9 +144,9 @@ interface Patient {
 }
 ```
 
-#### Incident/Appointment Interface
+#### Appointment/Appointment Interface
 ```typescript
-interface Incident {
+interface Appointment {
   id: string;
   patientId: string;
   title: string;

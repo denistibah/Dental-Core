@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Patient, Incident, AppContextType } from '../types';
+import { Patient, Appointment, AppContextType } from '../types';
 import { 
   getPatients, 
   savePatients, 
@@ -21,7 +21,7 @@ export const useApp = () => {
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [appointments, setAppointments] = useState<Incident[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
     initializeStorage();
@@ -56,17 +56,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveAppointments(updatedAppointments);
   };
 
-  const addIncident = (appointmentData: Omit<Incident, 'id'>) => {
-    const newIncident: Incident = {
+  const addAppointment = (appointmentData: Omit<Appointment, 'id'>) => {
+    const newAppointment: Appointment = {
       ...appointmentData,
       id: generateId()
     };
-    const updatedAppointments = [...appointments, newIncident];
+    const updatedAppointments = [...appointments, newAppointment];
     setAppointments(updatedAppointments);
     saveAppointments(updatedAppointments);
   };
 
-  const updateIncident = (id: string, appointmentData: Partial<Incident>) => {
+  const updateAppointment = (id: string, appointmentData: Partial<Appointment>) => {
     const updatedAppointments = appointments.map(appointment =>
       appointment.id === id ? { ...appointment, ...appointmentData } : appointment
     );
@@ -74,7 +74,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     saveAppointments(updatedAppointments);
   };
 
-  const deleteIncident = (id: string) => {
+  const deleteAppointment = (id: string) => {
     const updatedAppointments = appointments.filter(appointment => appointment.id !== id);
     setAppointments(updatedAppointments);
     saveAppointments(updatedAppointments);
@@ -86,9 +86,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addPatient,
     updatePatient,
     deletePatient,
-    addIncident,
-    updateIncident,
-    deleteIncident
+    addAppointment,
+    updateAppointment,
+    deleteAppointment
   };
 
   return (
