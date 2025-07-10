@@ -45,11 +45,11 @@ export interface AuthContextType {
 
 export interface AppContextType {
   patients: Patient[];
-  incidents: Incident[];
+  appointments: Incident[];
   addPatient: (patient: Omit<Patient, 'id'>) => void;
   updatePatient: (id: string, patient: Partial<Patient>) => void;
   deletePatient: (id: string) => void;
-  addIncident: (incident: Omit<Incident, 'id'>) => void;
-  updateIncident: (id: string, incident: Partial<Incident>) => void;
+  addIncident: (appointment: Omit<Incident, 'id'>) => void;
+  updateIncident: (id: string, appointment: Partial<Incident>) => void;
   deleteIncident: (id: string) => void;
 }

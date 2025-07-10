@@ -13,16 +13,16 @@ import {
 import 'react-calendar/dist/Calendar.css';
 
 const CalendarView: React.FC = () => {
-  const { patients, incidents } = useApp();
+  const { patients, appointments } = useApp();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week'>('month');
 
   // Get appointments for a specific date
   const getAppointmentsForDate = useCallback((date: Date) => {
-    return incidents.filter(incident => 
-      isSameDay(new Date(incident.appointmentDate), date)
+    return appointments.filter(appointment => 
+      isSameDay(new Date(appointment.appointmentDate), date)
     );
-  }, [incidents]);
+  }, [appointments]);
 
   // Get appointments for the selected date
   const selectedDateAppointments = useMemo(() => {
@@ -34,11 +34,11 @@ const CalendarView: React.FC = () => {
     const start = startOfMonth(selectedDate);
     const end = endOfMonth(selectedDate);
     
-    return incidents.filter(incident => {
-      const appointmentDate = new Date(incident.appointmentDate);
+    return appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.appointmentDate);
       return appointmentDate >= start && appointmentDate <= end;
     });
-  }, [incidents, selectedDate]);
+  }, [appointments, selectedDate]);
 
   // Custom tile content for the calendar
   const tileContent = ({ date, view }: { date: Date; view: string }) => {

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
   Calendar,
   Clock,
   User,
@@ -19,7 +19,7 @@ import { format } from 'date-fns';
 import { convertFileToBase64 } from '../utils/storage';
 
 const Appointments: React.FC = () => {
-  const { patients, incidents, addIncident, updateIncident, deleteIncident } = useApp();
+  const { patients, appointments, addIncident, updateIncident, deleteIncident } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
@@ -37,29 +37,29 @@ const Appointments: React.FC = () => {
     nextDate: ''
   });
 
-  const filteredIncidents = incidents.filter(incident => {
-    const patient = patients.find(p => p.id === incident.patientId);
+  const filteredAppointments = appointments.filter(appointment => {
+    const patient = patients.find(p => p.id === appointment.patientId);
     const matchesSearch = patient?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         incident.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         incident.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'All' || incident.status === statusFilter;
-    
+      appointment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appointment.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = statusFilter === 'All' || appointment.status === statusFilter;
+
     return matchesSearch && matchesStatus;
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const incidentData = {
+    const appointmentData = {
       ...formData,
       cost: formData.cost ? parseFloat(formData.cost) : undefined,
       files: uploadingFiles
     };
 
     if (editingIncident) {
-      updateIncident(editingIncident.id, incidentData);
+      updateIncident(editingIncident.id, appointmentData);
     } else {
-      addIncident(incidentData);
+      addIncident(appointmentData);
     }
     resetForm();
   };
@@ -81,32 +81,32 @@ const Appointments: React.FC = () => {
     setShowModal(false);
   };
 
-  const handleEdit = (incident: Incident) => {
-    setEditingIncident(incident);
+  const handleEdit = (appointment: Incident) => {
+    setEditingIncident(appointment);
     setFormData({
-      patientId: incident.patientId,
-      title: incident.title,
-      description: incident.description,
-      comments: incident.comments,
-      appointmentDate: incident.appointmentDate.slice(0, 16),
-      cost: incident.cost?.toString() || '',
-      treatment: incident.treatment || '',
-      status: incident.status,
-      nextDate: incident.nextDate ? incident.nextDate.slice(0, 16) : ''
+      patientId: appointment.patientId,
+      title: appointment.title,
+      description: appointment.description,
+      comments: appointment.comments,
+      appointmentDate: appointment.appointmentDate.slice(0, 16),
+      cost: appointment.cost?.toString() || '',
+      treatment: appointment.treatment || '',
+      status: appointment.status,
+      nextDate: appointment.nextDate ? appointment.nextDate.slice(0, 16) : ''
     });
-    setUploadingFiles(incident.files || []);
+    setUploadingFiles(appointment.files || []);
     setShowModal(true);
   };
 
-  const handleDelete = (incidentId: string) => {
+  const handleDelete = (appointmentId: string) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
-      deleteIncident(incidentId);
+      deleteIncident(appointmentId);
     }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
+
     for (const file of files) {
       try {
         const base64 = await convertFileToBase64(file);
@@ -197,18 +197,18 @@ const Appointments: React.FC = () => {
 
       {/* Appointments List */}
       <div className="space-y-4">
-        {filteredIncidents.map((incident) => {
-          const patient = patients.find(p => p.id === incident.patientId);
+        {filteredAppointments.map((appointment) => {
+          const patient = patients.find(p => p.id === appointment.patientId);
           return (
-            <div key={incident.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div key={appointment.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <div className="flex items-center space-x-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">{incident.title}</h3>
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(incident.status)}`}>
-                          {incident.status}
+                        <h3 className="text-lg font-semibold text-gray-900">{appointment.title}</h3>
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(appointment.status)}`}>
+                          {appointment.status}
                         </span>
                       </div>
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
@@ -218,29 +218,29 @@ const Appointments: React.FC = () => {
                         </div>
                         <div className="flex items-center space-x-1">
                           <Calendar size={16} />
-                          <span>{format(new Date(incident.appointmentDate), 'MMM d, yyyy')}</span>
+                          <span>{format(new Date(appointment.appointmentDate), 'MMM d, yyyy')}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Clock size={16} />
-                          <span>{format(new Date(incident.appointmentDate), 'h:mm a')}</span>
+                          <span>{format(new Date(appointment.appointmentDate), 'h:mm a')}</span>
                         </div>
-                        {incident.cost && (
+                        {appointment.cost && (
                           <div className="flex items-center space-x-1">
                             <DollarSign size={16} />
-                            <span>${incident.cost}</span>
+                            <span>${appointment.cost}</span>
                           </div>
                         )}
                       </div>
                     </div>
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => handleEdit(incident)}
+                        onClick={() => handleEdit(appointment)}
                         className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       >
                         <Edit size={16} />
                       </button>
                       <button
-                        onClick={() => handleDelete(incident.id)}
+                        onClick={() => handleDelete(appointment.id)}
                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
                         <Trash2 size={16} />
@@ -251,35 +251,35 @@ const Appointments: React.FC = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                     <div>
                       <p className="text-sm font-medium text-gray-700 mb-1">Description</p>
-                      <p className="text-sm text-gray-600">{incident.description}</p>
+                      <p className="text-sm text-gray-600">{appointment.description}</p>
                     </div>
-                    {incident.comments && (
+                    {appointment.comments && (
                       <div>
                         <p className="text-sm font-medium text-gray-700 mb-1">Comments</p>
-                        <p className="text-sm text-gray-600">{incident.comments}</p>
+                        <p className="text-sm text-gray-600">{appointment.comments}</p>
                       </div>
                     )}
-                    {incident.treatment && (
+                    {appointment.treatment && (
                       <div>
                         <p className="text-sm font-medium text-gray-700 mb-1">Treatment</p>
-                        <p className="text-sm text-gray-600">{incident.treatment}</p>
+                        <p className="text-sm text-gray-600">{appointment.treatment}</p>
                       </div>
                     )}
-                    {incident.nextDate && (
+                    {appointment.nextDate && (
                       <div>
                         <p className="text-sm font-medium text-gray-700 mb-1">Next Appointment</p>
                         <p className="text-sm text-gray-600">
-                          {format(new Date(incident.nextDate), 'MMM d, yyyy h:mm a')}
+                          {format(new Date(appointment.nextDate), 'MMM d, yyyy h:mm a')}
                         </p>
                       </div>
                     )}
                   </div>
 
-                  {incident.files && incident.files.length > 0 && (
+                  {appointment.files && appointment.files.length > 0 && (
                     <div>
                       <p className="text-sm font-medium text-gray-700 mb-2">Attachments</p>
                       <div className="flex flex-wrap gap-2">
-                        {incident.files.map((file, index) => (
+                        {appointment.files.map((file, index) => (
                           <button
                             key={index}
                             onClick={() => downloadFile(file)}
@@ -300,13 +300,13 @@ const Appointments: React.FC = () => {
         })}
       </div>
 
-      {filteredIncidents.length === 0 && (
+      {filteredAppointments.length === 0 && (
         <div className="text-center py-12">
           <Calendar size={48} className="mx-auto text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No appointments found</h3>
           <p className="text-gray-500">
-            {searchTerm || statusFilter !== 'All' 
-              ? 'Try adjusting your search criteria' 
+            {searchTerm || statusFilter !== 'All'
+              ? 'Try adjusting your search criteria'
               : 'Add your first appointment to get started'
             }
           </p>

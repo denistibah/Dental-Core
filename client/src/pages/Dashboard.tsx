@@ -13,57 +13,57 @@ import {
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { patients, incidents } = useApp();
+  const { patients, appointments } = useApp();
 
   const dashboardData = useMemo(() => {
     const now = new Date();
     const nextWeek = addDays(now, 7);
 
     // Upcoming appointments (next 10)
-    const upcomingAppointments = incidents
-      .filter(incident => {
-        const appointmentDate = new Date(incident.appointmentDate);
+    const upcomingAppointments = appointments
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.appointmentDate);
         return isAfter(appointmentDate, now);
       })
       .sort((a, b) => new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime())
       .slice(0, 10);
 
     // Today's appointments
-    const todayAppointments = incidents.filter(incident => {
-      const appointmentDate = new Date(incident.appointmentDate);
+    const todayAppointments = appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.appointmentDate);
       const today = new Date();
       return appointmentDate.toDateString() === today.toDateString();
     });
 
     // This week's appointments
-    const weeklyAppointments = incidents.filter(incident => {
-      const appointmentDate = new Date(incident.appointmentDate);
+    const weeklyAppointments = appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.appointmentDate);
       return isAfter(appointmentDate, now) && isBefore(appointmentDate, nextWeek);
     });
 
     // Status statistics
-    const completedTreatments = incidents.filter(incident => incident.status === 'Completed').length;
-    const pendingTreatments = incidents.filter(incident => incident.status === 'Scheduled').length;
-    const inProgressTreatments = incidents.filter(incident => incident.status === 'In Progress').length;
+    const completedTreatments = appointments.filter(appointment => appointment.status === 'Completed').length;
+    const pendingTreatments = appointments.filter(appointment => appointment.status === 'Scheduled').length;
+    const inProgressTreatments = appointments.filter(appointment => appointment.status === 'In Progress').length;
 
     // Revenue calculation
-    const totalRevenue = incidents
-      .filter(incident => incident.cost && incident.status === 'Completed')
-      .reduce((sum, incident) => sum + (incident.cost || 0), 0);
+    const totalRevenue = appointments
+      .filter(appointment => appointment.cost && appointment.status === 'Completed')
+      .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
 
-    const monthlyRevenue = incidents
-      .filter(incident => {
-        if (!incident.cost || incident.status !== 'Completed') return false;
-        const appointmentDate = new Date(incident.appointmentDate);
+    const monthlyRevenue = appointments
+      .filter(appointment => {
+        if (!appointment.cost || appointment.status !== 'Completed') return false;
+        const appointmentDate = new Date(appointment.appointmentDate);
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
         return appointmentDate.getMonth() === currentMonth && appointmentDate.getFullYear() === currentYear;
       })
-      .reduce((sum, incident) => sum + (incident.cost || 0), 0);
+      .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
 
     // Top patients (by number of appointments)
     const patientAppointmentCount = patients.map(patient => {
-      const appointmentCount = incidents.filter(incident => incident.patientId === patient.id).length;
+      const appointmentCount = appointments.filter(appointment => appointment.patientId === patient.id).length;
       return { ...patient, appointmentCount };
     })
     .sort((a, b) => b.appointmentCount - a.appointmentCount)
@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
       monthlyRevenue,
       patientAppointmentCount
     };
-  }, [patients, incidents]);
+  }, [patients, appointments]);
 
   const StatCard: React.FC<{
     title: string;
@@ -183,24 +183,24 @@ const Dashboard: React.FC = () => {
               <p className="text-gray-500 text-center py-4">No upcoming appointments</p>
             ) : (
               <div className="space-y-4">
-                {dashboardData.upcomingAppointments.map((incident) => {
-                  const patient = patients.find(p => p.id === incident.patientId);
+                {dashboardData.upcomingAppointments.map((appointment) => {
+                  const patient = patients.find(p => p.id === appointment.patientId);
                   return (
-                    <div key={incident.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={appointment.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div>
                         <p className="font-medium text-gray-900">{patient?.name}</p>
-                        <p className="text-sm text-gray-600">{incident.title}</p>
+                        <p className="text-sm text-gray-600">{appointment.title}</p>
                         <p className="text-xs text-gray-500">
-                          {format(new Date(incident.appointmentDate), 'MMM d, yyyy h:mm a')}
+                          {format(new Date(appointment.appointmentDate), 'MMM d, yyyy h:mm a')}
                         </p>
                       </div>
                       <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        incident.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
-                        incident.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                        incident.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                        appointment.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
+                        appointment.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                        appointment.status === 'Completed' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
                       }`}>
-                        {incident.status}
+                        {appointment.status}
                       </div>
                     </div>
                   );
@@ -260,27 +260,27 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {dashboardData.weeklyAppointments.map((incident) => {
-                const patient = patients.find(p => p.id === incident.patientId);
+              {dashboardData.weeklyAppointments.map((appointment) => {
+                const patient = patients.find(p => p.id === appointment.patientId);
                 return (
-                  <div key={incident.id} className="p-4 border border-gray-200 rounded-lg">
+                  <div key={appointment.id} className="p-4 border border-gray-200 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-medium text-gray-900">{patient?.name}</h4>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        incident.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
-                        incident.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                        appointment.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
+                        appointment.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-green-100 text-green-800'
                       }`}>
-                        {incident.status}
+                        {appointment.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-1">{incident.title}</p>
+                    <p className="text-sm text-gray-600 mb-1">{appointment.title}</p>
                     <p className="text-xs text-gray-500">
-                      {format(new Date(incident.appointmentDate), 'EEE, MMM d - h:mm a')}
+                      {format(new Date(appointment.appointmentDate), 'EEE, MMM d - h:mm a')}
                     </p>
-                    {incident.cost && (
+                    {appointment.cost && (
                       <p className="text-sm font-medium text-green-600 mt-2">
-                        ${incident.cost}
+                        ${appointment.cost}
                       </p>
                     )}
                   </div>

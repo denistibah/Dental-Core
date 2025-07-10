@@ -17,7 +17,7 @@ import {
 
 const PatientDashboard: React.FC = () => {
   const { user } = useAuth();
-  const { patients, incidents } = useApp();
+  const { patients, appointments } = useApp();
 
   const patientData = useMemo(() => {
     if (!user?.patientId) return null;
@@ -25,42 +25,42 @@ const PatientDashboard: React.FC = () => {
     const patient = patients.find(p => p.id === user.patientId);
     if (!patient) return null;
 
-    const patientIncidents = incidents.filter(incident => incident.patientId === user.patientId);
+    const patientAppointments = appointments.filter(appointment => appointment.patientId === user.patientId);
     
     const now = new Date();
 
-    const upcomingAppointments = patientIncidents
-      .filter(incident => {
-        const appointmentDate = new Date(incident.appointmentDate);
+    const upcomingAppointments = patientAppointments
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.appointmentDate);
         return isAfter(appointmentDate, now);
       })
       .sort((a, b) => new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime());
 
-    const pastAppointments = patientIncidents
-      .filter(incident => {
-        const appointmentDate = new Date(incident.appointmentDate);
+    const pastAppointments = patientAppointments
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.appointmentDate);
         return isBefore(appointmentDate, now);
       })
       .sort((a, b) => new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime());
 
     const nextAppointment = upcomingAppointments[0];
 
-    const totalCost = patientIncidents
-      .filter(incident => incident.cost && incident.status === 'Completed')
-      .reduce((sum, incident) => sum + (incident.cost || 0), 0);
+    const totalCost = patientAppointments
+      .filter(appointment => appointment.cost && appointment.status === 'Completed')
+      .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
 
-    const completedTreatments = patientIncidents.filter(incident => incident.status === 'Completed').length;
+    const completedTreatments = patientAppointments.filter(appointment => appointment.status === 'Completed').length;
 
     return {
       patient,
-      patientIncidents,
+      patientAppointments,
       upcomingAppointments,
       pastAppointments,
       nextAppointment,
       totalCost,
       completedTreatments
     };
-  }, [user, patients, incidents]);
+  }, [user, patients, appointments]);
 
   if (!patientData) {
     return (
@@ -225,25 +225,25 @@ const PatientDashboard: React.FC = () => {
               <p className="text-gray-500 text-center py-4">No upcoming appointments</p>
             ) : (
               <div className="space-y-4">
-                {upcomingAppointments.slice(0, 5).map((incident) => (
-                  <div key={incident.id} className="p-4 bg-gray-50 rounded-lg">
+                {upcomingAppointments.slice(0, 5).map((appointment) => (
+                  <div key={appointment.id} className="p-4 bg-gray-50 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-gray-900">{incident.title}</h4>
+                      <h4 className="font-medium text-gray-900">{appointment.title}</h4>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        incident.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
-                        incident.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
+                        appointment.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
+                        appointment.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
                         'bg-green-100 text-green-800'
                       }`}>
-                        {incident.status}
+                        {appointment.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{incident.description}</p>
+                    <p className="text-sm text-gray-600 mb-2">{appointment.description}</p>
                     <p className="text-sm text-gray-500">
-                      {format(new Date(incident.appointmentDate), 'MMM d, yyyy h:mm a')}
+                      {format(new Date(appointment.appointmentDate), 'MMM d, yyyy h:mm a')}
                     </p>
-                    {incident.cost && (
+                    {appointment.cost && (
                       <p className="text-sm font-medium text-green-600 mt-2">
-                        Cost: ${incident.cost}
+                        Cost: ${appointment.cost}
                       </p>
                     )}
                   </div>
@@ -266,37 +266,37 @@ const PatientDashboard: React.FC = () => {
               <p className="text-gray-500 text-center py-4">No treatment history</p>
             ) : (
               <div className="space-y-4">
-                {pastAppointments.slice(0, 5).map((incident) => (
-                  <div key={incident.id} className="p-4 border border-gray-200 rounded-lg">
+                {pastAppointments.slice(0, 5).map((appointment) => (
+                  <div key={appointment.id} className="p-4 border border-gray-200 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-gray-900">{incident.title}</h4>
+                      <h4 className="font-medium text-gray-900">{appointment.title}</h4>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        incident.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                        incident.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                        appointment.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                        appointment.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-gray-100 text-gray-800'
                       }`}>
-                        {incident.status}
+                        {appointment.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{incident.description}</p>
-                    {incident.treatment && (
+                    <p className="text-sm text-gray-600 mb-2">{appointment.description}</p>
+                    {appointment.treatment && (
                       <p className="text-sm text-gray-700 mb-2">
-                        <strong>Treatment:</strong> {incident.treatment}
+                        <strong>Treatment:</strong> {appointment.treatment}
                       </p>
                     )}
                     <p className="text-sm text-gray-500 mb-2">
-                      {format(new Date(incident.appointmentDate), 'MMM d, yyyy')}
+                      {format(new Date(appointment.appointmentDate), 'MMM d, yyyy')}
                     </p>
-                    {incident.cost && (
+                    {appointment.cost && (
                       <p className="text-sm font-medium text-green-600 mb-2">
-                        Cost: ${incident.cost}
+                        Cost: ${appointment.cost}
                       </p>
                     )}
-                    {incident.files && incident.files.length > 0 && (
+                    {appointment.files && appointment.files.length > 0 && (
                       <div className="mt-3">
                         <p className="text-xs text-gray-500 mb-2">Attachments:</p>
                         <div className="flex flex-wrap gap-2">
-                          {incident.files.map((file, index) => (
+                          {appointment.files.map((file, index) => (
                             <button
                               key={index}
                               onClick={() => downloadFile(file)}
@@ -309,9 +309,9 @@ const PatientDashboard: React.FC = () => {
                         </div>
                       </div>
                     )}
-                    {incident.nextDate && (
+                    {appointment.nextDate && (
                       <p className="text-sm text-blue-600 mt-2">
-                        <strong>Next visit:</strong> {format(new Date(incident.nextDate), 'MMM d, yyyy')}
+                        <strong>Next visit:</strong> {format(new Date(appointment.nextDate), 'MMM d, yyyy')}
                       </p>
                     )}
                   </div>

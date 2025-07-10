@@ -16,7 +16,7 @@ import { Patient } from '../types';
 import { format } from 'date-fns';
 
 const Patients: React.FC = () => {
-  const { patients, incidents, addPatient, updatePatient, deletePatient } = useApp();
+  const { patients, appointments, addPatient, updatePatient, deletePatient } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
@@ -69,7 +69,7 @@ const Patients: React.FC = () => {
   };
 
   const handleDelete = (patientId: string) => {
-    const patientAppointments = incidents.filter(incident => incident.patientId === patientId);
+    const patientAppointments = appointments.filter(appointment => appointment.patientId === patientId);
     if (patientAppointments.length > 0) {
       if (window.confirm('This patient has appointments. Are you sure you want to delete this patient? All associated appointments will also be deleted.')) {
         deletePatient(patientId);
@@ -82,14 +82,14 @@ const Patients: React.FC = () => {
   };
 
   const getPatientStats = (patientId: string) => {
-    const patientIncidents = incidents.filter(incident => incident.patientId === patientId);
-    const completed = patientIncidents.filter(incident => incident.status === 'Completed').length;
-    const upcoming = patientIncidents.filter(incident => 
-      incident.status === 'Scheduled' && new Date(incident.appointmentDate) > new Date()
+    const patientAppointments = appointments.filter(appointment => appointment.patientId === patientId);
+    const completed = patientAppointments.filter(appointment => appointment.status === 'Completed').length;
+    const upcoming = patientAppointments.filter(appointment => 
+      appointment.status === 'Scheduled' && new Date(appointment.appointmentDate) > new Date()
     ).length;
-    const totalSpent = patientIncidents
-      .filter(incident => incident.cost && incident.status === 'Completed')
-      .reduce((sum, incident) => sum + (incident.cost || 0), 0);
+    const totalSpent = patientAppointments
+      .filter(appointment => appointment.cost && appointment.status === 'Completed')
+      .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
     
     return { completed, upcoming, totalSpent };
   };

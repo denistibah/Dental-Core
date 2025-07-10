@@ -14,7 +14,7 @@ import {
 
 const MyAppointments: React.FC = () => {
   const { user } = useAuth();
-  const { patients, incidents } = useApp();
+  const { patients, appointments } = useApp();
 
   const appointmentsData = useMemo(() => {
     if (!user?.patientId) return { upcoming: [], past: [], patient: null };
@@ -22,26 +22,26 @@ const MyAppointments: React.FC = () => {
     const patient = patients.find(p => p.id === user.patientId);
     if (!patient) return { upcoming: [], past: [], patient: null };
 
-    const patientIncidents = incidents.filter(incident => incident.patientId === user.patientId);
+    const patientAppointments = appointments.filter(appointment => appointment.patientId === user.patientId);
     
     const now = new Date();
 
-    const upcoming = patientIncidents
-      .filter(incident => {
-        const appointmentDate = new Date(incident.appointmentDate);
+    const upcoming = patientAppointments
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.appointmentDate);
         return isAfter(appointmentDate, now);
       })
       .sort((a, b) => new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime());
 
-    const past = patientIncidents
-      .filter(incident => {
-        const appointmentDate = new Date(incident.appointmentDate);
+    const past = patientAppointments
+      .filter(appointment => {
+        const appointmentDate = new Date(appointment.appointmentDate);
         return isBefore(appointmentDate, now);
       })
       .sort((a, b) => new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime());
 
     return { upcoming, past, patient };
-  }, [user, patients, incidents]);
+  }, [user, patients, appointments]);
 
   if (!appointmentsData.patient) {
     return (

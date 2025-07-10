@@ -34,7 +34,7 @@ export const mockPatients: Patient[] = [
   }
 ];
 
-export const mockIncidents: Incident[] = [
+export const mockAppointments: Incident[] = [
   {
     id: "i1",
     patientId: "p1",
@@ -75,7 +75,7 @@ export const mockIncidents: Incident[] = [
 const STORAGE_KEYS = {
   USERS: 'dental_users',
   PATIENTS: 'dental_patients',
-  INCIDENTS: 'dental_incidents',
+  INCIDENTS: 'dental_appointments',
   CURRENT_USER: 'dental_current_user'
 };
 
@@ -88,7 +88,7 @@ export const initializeStorage = () => {
     localStorage.setItem(STORAGE_KEYS.PATIENTS, JSON.stringify(mockPatients));
   }
   if (!localStorage.getItem(STORAGE_KEYS.INCIDENTS)) {
-    localStorage.setItem(STORAGE_KEYS.INCIDENTS, JSON.stringify(mockIncidents));
+    localStorage.setItem(STORAGE_KEYS.INCIDENTS, JSON.stringify(mockAppointments));
   }
 };
 
@@ -122,13 +122,13 @@ export const savePatients = (patients: Patient[]) => {
 };
 
 // Incident operations
-export const getIncidents = (): Incident[] => {
-  const incidents = localStorage.getItem(STORAGE_KEYS.INCIDENTS);
-  return incidents ? JSON.parse(incidents) : [];
+export const getAppointments = (): Incident[] => {
+  const appointments = localStorage.getItem(STORAGE_KEYS.INCIDENTS);
+  return appointments ? JSON.parse(appointments) : [];
 };
 
-export const saveIncidents = (incidents: Incident[]) => {
-  localStorage.setItem(STORAGE_KEYS.INCIDENTS, JSON.stringify(incidents));
+export const saveAppointments = (appointments: Incident[]) => {
+  localStorage.setItem(STORAGE_KEYS.INCIDENTS, JSON.stringify(appointments));
 };
 
 // File operations

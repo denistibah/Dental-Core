@@ -3,8 +3,8 @@ import { Patient, Incident, AppContextType } from '../types';
 import { 
   getPatients, 
   savePatients, 
-  getIncidents, 
-  saveIncidents, 
+  getAppointments, 
+  saveAppointments, 
   generateId,
   initializeStorage
 } from '../utils/storage';
@@ -21,12 +21,12 @@ export const useApp = () => {
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [appointments, setAppointments] = useState<Incident[]>([]);
 
   useEffect(() => {
     initializeStorage();
     setPatients(getPatients());
-    setIncidents(getIncidents());
+    setAppointments(getAppointments());
   }, []);
 
   const addPatient = (patientData: Omit<Patient, 'id'>) => {
@@ -49,40 +49,40 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deletePatient = (id: string) => {
     const updatedPatients = patients.filter(patient => patient.id !== id);
-    const updatedIncidents = incidents.filter(incident => incident.patientId !== id);
+    const updatedAppointments = appointments.filter(appointment => appointment.patientId !== id);
     setPatients(updatedPatients);
-    setIncidents(updatedIncidents);
+    setAppointments(updatedAppointments);
     savePatients(updatedPatients);
-    saveIncidents(updatedIncidents);
+    saveAppointments(updatedAppointments);
   };
 
-  const addIncident = (incidentData: Omit<Incident, 'id'>) => {
+  const addIncident = (appointmentData: Omit<Incident, 'id'>) => {
     const newIncident: Incident = {
-      ...incidentData,
+      ...appointmentData,
       id: generateId()
     };
-    const updatedIncidents = [...incidents, newIncident];
-    setIncidents(updatedIncidents);
-    saveIncidents(updatedIncidents);
+    const updatedAppointments = [...appointments, newIncident];
+    setAppointments(updatedAppointments);
+    saveAppointments(updatedAppointments);
   };
 
-  const updateIncident = (id: string, incidentData: Partial<Incident>) => {
-    const updatedIncidents = incidents.map(incident =>
-      incident.id === id ? { ...incident, ...incidentData } : incident
+  const updateIncident = (id: string, appointmentData: Partial<Incident>) => {
+    const updatedAppointments = appointments.map(appointment =>
+      appointment.id === id ? { ...appointment, ...appointmentData } : appointment
     );
-    setIncidents(updatedIncidents);
-    saveIncidents(updatedIncidents);
+    setAppointments(updatedAppointments);
+    saveAppointments(updatedAppointments);
   };
 
   const deleteIncident = (id: string) => {
-    const updatedIncidents = incidents.filter(incident => incident.id !== id);
-    setIncidents(updatedIncidents);
-    saveIncidents(updatedIncidents);
+    const updatedAppointments = appointments.filter(appointment => appointment.id !== id);
+    setAppointments(updatedAppointments);
+    saveAppointments(updatedAppointments);
   };
 
   const value: AppContextType = {
     patients,
-    incidents,
+    appointments,
     addPatient,
     updatePatient,
     deletePatient,
