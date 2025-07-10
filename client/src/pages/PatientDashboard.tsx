@@ -150,7 +150,7 @@ const PatientDashboard: React.FC = () => {
             </div>
             <div>
               <p className="text-sm text-gray-500">Health Info</p>
-              <p className="font-medium text-sm">{patient.healthInfo}</p>
+              <p className="font-medium text-sm">{patient.notes}</p>
             </div>
           </div>
         </div>

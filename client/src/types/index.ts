@@ -11,7 +11,7 @@ export interface Patient {
   name: string;
   dob: string;
   contact: string;
-  healthInfo: string;
+  notes: string;
   email?: string;
 }
 

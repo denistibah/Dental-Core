@@ -24,7 +24,7 @@ const Patients: React.FC = () => {
     name: '',
     dob: '',
     contact: '',
-    healthInfo: '',
+    notes: '',
     email: ''
   });
 
@@ -49,7 +49,7 @@ const Patients: React.FC = () => {
       name: '',
       dob: '',
       contact: '',
-      healthInfo: '',
+      notes: '',
       email: ''
     });
     setEditingPatient(null);
@@ -62,7 +62,7 @@ const Patients: React.FC = () => {
       name: patient.name,
       dob: patient.dob,
       contact: patient.contact,
-      healthInfo: patient.healthInfo,
+      notes: patient.notes,
       email: patient.email || ''
     });
     setShowModal(true);
@@ -182,8 +182,8 @@ const Patients: React.FC = () => {
                 <div className="flex items-start space-x-2">
                   <Heart size={14} className="text-red-500 mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Health Information</p>
-                    <p className="text-sm text-gray-700">{patient.healthInfo}</p>
+                    <p className="text-xs text-gray-500">Notes</p>
+                    <p className="text-sm text-gray-700">{patient.notes}</p>
                   </div>
                 </div>
               </div>
@@ -290,13 +290,13 @@ const Patients: React.FC = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Health Information *
+                  Notes *
                 </label>
                 <textarea
                   required
                   rows={3}
-                  value={formData.healthInfo}
-                  onChange={(e) => setFormData({ ...formData, healthInfo: e.target.value })}
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="Any allergies, medications, health conditions..."
                 />

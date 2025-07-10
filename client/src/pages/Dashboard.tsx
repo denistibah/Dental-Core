@@ -119,7 +119,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Patients"
           value={patients.length}
@@ -144,10 +144,10 @@ const Dashboard: React.FC = () => {
           icon={CheckCircle}
           color="bg-purple-500"
         />
-      </div>
+      </div> */}
 
       {/* Treatment Status */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           title="Pending Treatments"
           value={dashboardData.pendingTreatments}
@@ -167,11 +167,11 @@ const Dashboard: React.FC = () => {
           color="bg-emerald-500"
           subtitle="All time"
         />
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Appointments */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center">
               <Calendar className="mr-2" size={20} />
@@ -208,10 +208,10 @@ const Dashboard: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Top Patients */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center">
               <Users className="mr-2" size={20} />
@@ -246,7 +246,7 @@ const Dashboard: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* This Week's Schedule */}

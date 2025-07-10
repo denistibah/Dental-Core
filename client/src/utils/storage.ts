@@ -13,7 +13,7 @@ export const mockPatients: Patient[] = [
     name: "John Doe",
     dob: "1990-05-10",
     contact: "1234567890",
-    healthInfo: "No allergies",
+    notes: "No allergies",
     email: "john@entnt.in"
   },
   {
@@ -21,7 +21,7 @@ export const mockPatients: Patient[] = [
     name: "Jane Smith",
     dob: "1985-08-15",
     contact: "0987654321",
-    healthInfo: "Diabetic, allergic to penicillin",
+    notes: "Diabetic, allergic to penicillin",
     email: "jane@entnt.in"
   },
   {
@@ -29,7 +29,7 @@ export const mockPatients: Patient[] = [
     name: "Bob Johnson",
     dob: "1978-12-03",
     contact: "5555555555",
-    healthInfo: "High blood pressure",
+    notes: "High blood pressure",
     email: "bob@entnt.in"
   }
 ];
