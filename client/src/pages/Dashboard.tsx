@@ -278,11 +278,11 @@ const Dashboard: React.FC = () => {
                     <p className="text-xs text-gray-500">
                       {format(new Date(appointment.appointmentDate), 'EEE, MMM d - h:mm a')}
                     </p>
-                    {appointment.cost && (
+                    {/* {appointment.cost && (
                       <p className="text-sm font-medium text-green-600 mt-2">
                         ${appointment.cost}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 );
               })}
