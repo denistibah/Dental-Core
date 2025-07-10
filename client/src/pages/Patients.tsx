@@ -189,7 +189,7 @@ const Patients: React.FC = () => {
               </div>
 
               {/* Stats */}
-              <div className="border-t border-gray-200 pt-4">
+              {/* <div className="border-t border-gray-200 pt-4">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
                     <p className="text-lg font-semibold text-gray-900">{stats.completed}</p>
@@ -204,7 +204,7 @@ const Patients: React.FC = () => {
                     <p className="text-xs text-gray-500">Total Spent</p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           );
         })}
