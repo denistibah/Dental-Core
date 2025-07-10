@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import PatientDashboard from './pages/PatientDashboard';
 import Patients from './pages/Patients';
@@ -20,6 +21,7 @@ function App() {
           <div className="App">
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/" element={<Navigate to="/login" replace />} />
               
               {/* Admin Routes */}
