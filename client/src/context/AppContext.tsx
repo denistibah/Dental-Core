@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Patient, Appointment, AppContextType } from '../types';
+import { useAuth } from '../context/AuthContext';
 import {
   getPatients,
   savePatients,
@@ -26,14 +27,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const patients = await getPatientsFromAPI();
-      initializeStorage();
-      setPatients(patients);
-      setAppointments(getAppointments());
-    };
-    fetchData();
+      const fetchData = async () => {
+        const patients = await getPatientsFromAPI();
+        initializeStorage();
+        setPatients(patients);
+        setAppointments(getAppointments());
+      };
+      fetchData();
   }, []);
+
 
   const addPatient = async (patientData: Omit<Patient, 'id'>) => {
     let newPatient: Patient = {

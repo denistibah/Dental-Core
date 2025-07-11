@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const secureRoutes = require('./routes/secure.route'); // Import secure routes
 dotenv.config();
+
+const secureRoutes = require('./routes/secure.route'); // Import secure routes
 
 const app = express();
 app.use(cors());

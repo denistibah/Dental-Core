@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, AuthContextType } from '../types';
 import { getUsers, getCurrentUser, setCurrentUser, saveUsers } from '../utils/storage';
-import { registerUser, loginUser } from '../utils/api';
+import { registerUser, loginUserFromAPI } from '../utils/api';
 
 import { signOut} from 'firebase/auth';
 import { firebaseAuth } from '../firebase/firebase'; // Adjust the import path as necessary
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Login logic with API
   const login = async (email: string, password: string): Promise<{ error: boolean; msg: string }> => {
     try {
-      const response = await loginUser(email, password); // Assuming loginUser is an API function
+      const response = await loginUserFromAPI(email, password); // Assuming loginUserFromAPI is an API function
       if (response.status === 200) {
         const user = response.data;
         setUser(user);
