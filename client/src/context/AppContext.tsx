@@ -72,6 +72,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ...appointmentData,
       id: generateId()
     };
+
+    // addAppointmentFromAPI(newAppointment);
+
     const updatedAppointments = [...appointments, newAppointment];
     setAppointments(updatedAppointments);
     saveAppointments(updatedAppointments);

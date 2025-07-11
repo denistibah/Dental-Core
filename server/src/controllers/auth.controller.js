@@ -40,9 +40,6 @@ exports.register = async (req, res) => {
         password,
       });
   
-      // Wait for Firebase to propagate the user record (1-second delay)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-  
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
   
