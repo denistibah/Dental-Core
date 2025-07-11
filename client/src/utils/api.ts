@@ -131,6 +131,17 @@ export const getPatientsFromAPI = async () => {
     }
 };
 
+export const updatePatientFromAPI = async (id: string, patientData: Partial<Patient>) => {
+    try {
+        const response = await API.put(`/patients/${id}`, patientData);
+        debugger;
+        return response.data; // Return the updated patient data
+    } catch (error) {
+        console.error('Error fetching patients:', error);
+        return []; // return empty array in case of an error
+    }
+};
+
 export const savePatient = async (patient: Patient) => {
     try {
         const response = await API.post('/patients', patient);

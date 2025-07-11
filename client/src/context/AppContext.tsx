@@ -9,7 +9,7 @@ import {
   initializeStorage
 } from '../utils/storage';
 
-import { getPatientsFromAPI, savePatient } from "../utils/api";
+import { getPatientsFromAPI, savePatient, updatePatientFromAPI } from "../utils/api";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -48,9 +48,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     savePatients(updatedPatients);
   };
 
-  const updatePatient = (id: string, patientData: Partial<Patient>) => {
+  const updatePatient = async (id: string, patientData: Partial<Patient>) => {
+    const updatePatient = await updatePatientFromAPI(id, patientData);
     const updatedPatients = patients.map(patient =>
-      patient.id === id ? { ...patient, ...patientData } : patient
+      patient.id === id ? { ...patient, ...updatePatient } : patient
     );
     setPatients(updatedPatients);
     savePatients(updatedPatients);

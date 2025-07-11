@@ -27,11 +27,12 @@ exports.getPatients = async (req, res) => {
 
 exports.updatePatient = async (req, res) => {
   try {
-    const updated = await prisma.patient.update({
+    req.body.dob = new Date(req.body.dob); // Ensure dob is a Date object
+    const updatePatient = await prisma.patient.update({
       where: { id: req.params.id },
       data: req.body,
     });
-    res.json(updated);
+    res.status(200).json(updatePatient);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
