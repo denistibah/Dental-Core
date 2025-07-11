@@ -144,21 +144,22 @@ export const registerUser = async (email: string, password: string, role: string
 };
 
 // Patient operations - replace with API
-export const getPatients = async (): Promise<Patient[]> => {
+export const getPatients = async () => {
     try {
-        const patients = await getPatientsFromAPI();
-        return patients;
+        const response = await API.get('/patients');
+        return response.data;
     } catch (error) {
         console.error('Error fetching patients:', error);
         return []; // return empty array in case of an error
     }
 };
 
-export const savePatients = async (patients: Patient[]) => {
+export const savePatient = async (patient: Patient) => {
     try {
-        await savePatientsToAPI(patients);
+        const response = await API.post('/patients', patient);
+        return response;
     } catch (error) {
-        console.error('Error saving patients:', error);
+        throw error; // Pass the error to be handled by the caller
     }
 };
 

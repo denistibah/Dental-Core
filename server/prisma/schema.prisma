@@ -13,17 +13,16 @@ model User {
   password     String
   role         String
   appointments Appointment[]
-  patients     Patient[]
 }
 
 model Patient {
   id           String        @id @default(uuid())
   name         String
-  dateOfBirth  DateTime
+  dob          DateTime
+  contact      String
+  email        String
   notes        String?
-  studentId    String
   appointments Appointment[]
-  student      User          @relation(fields: [studentId], references: [id])
 }
 
 model Appointment {

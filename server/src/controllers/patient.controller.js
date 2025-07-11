@@ -2,22 +2,24 @@ const prisma = require('../prisma/client');
 
 exports.createPatient = async (req, res) => {
   try {
-    const { name, dateOfBirth, notes, studentId } = req.body;
+    const { name, dob, notes, email, contact } = req.body;
+
     const patient = await prisma.patient.create({
-      data: { name, dateOfBirth: new Date(dateOfBirth), notes, studentId },
+      data: { name, dob: new Date(dob), notes, email, contact },
     });
-    res.json(patient);
+
+    // console.log(patient);
+    return res.status(200).json(patient);
   } catch (err) {
+    console.error('Error creating patient:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
-exports.getPatientById = async (req, res) => {
+exports.getPatients = async (req, res) => {
   try {
-    const patient = await prisma.patient.findUnique({
-      where: { id: req.params.id },
-    });
-    res.json(patient);
+    const patients = await prisma.patient.findMany();
+    return res.status(200).json(patients);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
