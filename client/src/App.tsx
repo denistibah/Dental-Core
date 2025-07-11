@@ -26,28 +26,28 @@ function App() {
               
               {/* Admin Routes */}
               <Route path="/dashboard" element={
-                <ProtectedRoute roles={['Admin']}>
+                <ProtectedRoute roles={['Student']}>
                   <Layout>
                     <Dashboard />
                   </Layout>
                 </ProtectedRoute>
               } />
               <Route path="/patients" element={
-                <ProtectedRoute roles={['Admin']}>
+                <ProtectedRoute roles={['Student']}>
                   <Layout>
                     <Patients />
                   </Layout>
                 </ProtectedRoute>
               } />
               <Route path="/appointments" element={
-                <ProtectedRoute roles={['Admin']}>
+                <ProtectedRoute roles={['Student']}>
                   <Layout>
                     <Appointments />
                   </Layout>
                 </ProtectedRoute>
               } />
               <Route path="/calendar" element={
-                <ProtectedRoute roles={['Admin']}>
+                <ProtectedRoute roles={['Student']}>
                   <Layout>
                     <CalendarView />
                   </Layout>
@@ -56,14 +56,14 @@ function App() {
               
               {/* Patient Routes */}
               <Route path="/patient-dashboard" element={
-                <ProtectedRoute roles={['Patient']}>
+                <ProtectedRoute roles={['Professor']}>
                   <Layout>
                     <PatientDashboard />
                   </Layout>
                 </ProtectedRoute>
               } />
               <Route path="/my-appointments" element={
-                <ProtectedRoute roles={['Patient']}>
+                <ProtectedRoute roles={['Professor']}>
                   <Layout>
                     <MyAppointments />
                   </Layout>

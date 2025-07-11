@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  role: 'Student' | 'Professor';
+  role: string;
   email: string;
   password: string;
   patientId?: string;
@@ -38,9 +38,9 @@ export interface Appointment {
 
 export interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<object>;
   logout: () => void;
-  register: (email: string, password: string, role: 'Student' | 'Professor') => boolean; // Added register method
+  register: (email: string, password: string, role: string) => Promise<object>; // Change this to Promise<boolean>
   isAuthenticated: boolean;
 }
 

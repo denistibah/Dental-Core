@@ -1,7 +1,13 @@
 // api.ts
+import axios from 'axios';
 import { User, Patient, Appointment } from '../types';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase/firebase';
 
 const API_URL = 'https://localhost:5001/api'; // Replace with your actual API URL
+const API = axios.create({
+    baseURL: 'http://localhost:5001/api', // update if deployed
+});
 
 // User API requests
 export const getUsersFromAPI = async (): Promise<User[]> => {
@@ -106,6 +112,34 @@ export const setCurrentUser = async (user: User | null) => {
         await setCurrentUserToAPI(user);
     } catch (error) {
         console.error('Error setting current user:', error);
+    }
+};
+
+export const loginUser = async (email: string, password: string) => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const token = await userCredential.user.getIdToken();
+        const response = await API.post('/auth/login', {
+            token
+        });
+        return response; // Returning the response for further use
+    } catch (error: any) {
+        throw error; // Pass the error to be handled by the caller
+    }
+};
+
+// Register user function
+export const registerUser = async (email: string, password: string, role: string) => {
+    try {
+
+        const response = await API.post('/auth/register', {
+            email,
+            password,
+            role,
+        });
+        return response; // Returning the response for further use
+    } catch (error: any) {
+        throw error; // Pass the error to be handled by the caller
     }
 };
 

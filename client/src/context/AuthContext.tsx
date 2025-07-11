@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, AuthContextType } from '../types';
 import { getUsers, getCurrentUser, setCurrentUser, saveUsers } from '../utils/storage';
+import { registerUser, loginUser } from '../utils/api';
+import { error } from 'console';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,39 +26,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // Login logic
-  const login = (email: string, password: string): boolean => {
-    const users = getUsers();
-    const foundUser = users.find(u => u.email === email && u.password === password);
-    
-    if (foundUser) {
-      setUser(foundUser);
-      setIsAuthenticated(true);
-      setCurrentUser(foundUser);
-      return true;
+  // Login logic with API
+  const login = async (email: string, password: string): Promise<{ error: boolean; msg: string }> => {
+    try {
+      const response = await loginUser(email, password); // Assuming loginUser is an API function
+      if (response.status === 200) {
+        const user = response.data;
+        setUser(user);
+        setIsAuthenticated(true);
+        setCurrentUser(user);
+        return Promise.resolve({ error: false, msg: 'Login successful!' }); // Correct usage of Promise
+      } else {
+        return Promise.resolve({ error: true, msg: 'Login failed.' }); // Correct usage of Promise
+      }
+    } catch (err: any) {
+      console.error('Error during login:', err);
+      const msg = err.response?.data?.error || 'Login failed.';
+      return Promise.resolve({ error: true, msg: msg }); // Correct usage of Promise
     }
-    return false;
   };
 
-  // Register logic
-  const register = (email: string, password: string, role: string): boolean => {
-    const users = getUsers();
-    
-    // Check if user already exists
-    const existingUser = users.find(u => u.email === email);
-    if (existingUser) {
-      return false; // User already exists
+  // Register logic with API
+  // Register logic with API
+  const register = async (email: string, password: string, role: string): Promise<{ error: boolean; msg: string }> => {
+    try {
+      const response = await registerUser(email, password, role);
+      if (response.status === 200) {
+        return { error: false, msg: 'Registration successful!' };
+      } else {
+        return { error: true, msg: 'Registration failed.' };
+      }
+    } catch (err: any) {
+      console.error('Error during registration:', err);
+      const msg = err.response?.data?.error || 'Registration failed.';
+      return { error: true, msg: msg };
     }
-
-    // Create a new user
-    // const newUser: User = { email, password, role };
-    // users.push(newUser);
-    // saveUsers(users); // Save the updated users list
-
-    // setUser(newUser);
-    // setIsAuthenticated(true);
-    // setCurrentUser(newUser);
-    return true;
   };
 
   // Logout logic
@@ -70,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     user,
     login,
     logout,
-    register, // Add register function to the context
+    register,
     isAuthenticated
   };
 

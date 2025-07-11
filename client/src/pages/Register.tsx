@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link
+import toast from 'react-hot-toast';
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -14,25 +15,26 @@ const Register: React.FC = () => {
 
     const { register } = useAuth();
     const navigate = useNavigate();
-
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
+    
         // Check if passwords match
         if (password !== passwordConfirm) {
             setError('Passwords do not match');
             return;
         }
-
+    
         setLoading(true);
-
+    
         try {
-            const success = await register(email, password, role); // Pass role to register
-            if (!success) {
-                setError('Error during registration');
+            let result: { error?: boolean; msg?: string } = await register(email, password, role); // Define the type of result
+            if (result.error) {  // Check if there's an error in the result
+                setError(result?.msg || 'Registration failed');
             } else {
-                navigate('/login'); // Redirect to login page after successful registration
+                alert("Successfully registered!"); // Show success message
+                navigate('/login'); // Navigate to login page after successful registration
             }
         } catch (err) {
             setError('An error occurred during registration');
@@ -40,7 +42,7 @@ const Register: React.FC = () => {
             setLoading(false);
         }
     };
-
+    
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center p-4 relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
@@ -48,7 +50,7 @@ const Register: React.FC = () => {
                 <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-2000"></div>
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-50 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-pulse animation-delay-4000"></div>
             </div>
-
+    
             <div className="max-w-md w-full space-y-8 relative z-10 flex flex-col items-center">
                 {/* Header */}
                 <div className="text-center">
@@ -56,7 +58,7 @@ const Register: React.FC = () => {
                         Sign up to DentalCare
                     </h1>
                 </div>
-
+    
                 {/* Registration form */}
                 <form className="space-y-6 bg-white/90 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-white/20 w-full" onSubmit={handleSubmit}>
                     {error && (
@@ -64,7 +66,7 @@ const Register: React.FC = () => {
                             {error}
                         </div>
                     )}
-
+    
                     <div className="space-y-6">
                         {/* Email input */}
                         <div>
@@ -87,7 +89,7 @@ const Register: React.FC = () => {
                                 />
                             </div>
                         </div>
-
+    
                         {/* Password input */}
                         <div>
                             <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -109,7 +111,7 @@ const Register: React.FC = () => {
                                 />
                             </div>
                         </div>
-
+    
                         {/* Confirm Password input */}
                         <div>
                             <label htmlFor="passwordConfirm" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -131,7 +133,7 @@ const Register: React.FC = () => {
                                 />
                             </div>
                         </div>
-
+    
                         {/* Role selection */}
                         <div>
                             <label htmlFor="role" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -150,7 +152,7 @@ const Register: React.FC = () => {
                             </select>
                         </div>
                     </div>
-
+    
                     <div className="pt-4">
                         <button
                             type="submit"
@@ -171,7 +173,7 @@ const Register: React.FC = () => {
                         </button>
                     </div>
                 </form>
-
+    
                 {/* Link to Login */}
                 <div className="text-center mt-4">
                     <p className="text-sm text-gray-600">
