@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link
-import toast from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
+
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ const Register: React.FC = () => {
     
         // Check if passwords match
         if (password !== passwordConfirm) {
-            setError('Passwords do not match');
+            toast.error('Passwords do not match'); // Show error using toast
             return;
         }
     
@@ -31,13 +32,14 @@ const Register: React.FC = () => {
         try {
             let result: { error?: boolean; msg?: string } = await register(email, password, role); // Define the type of result
             if (result.error) {  // Check if there's an error in the result
-                setError(result?.msg || 'Registration failed');
+                toast.error(result?.msg || 'Registration failed'); // Show error using toast
             } else {
-                alert("Successfully registered!"); // Show success message
+                toast.success('Successfully registered!'); // Show success message
+                alert('Successfully registered!');
                 navigate('/login'); // Navigate to login page after successful registration
             }
         } catch (err) {
-            setError('An error occurred during registration');
+            toast.error('An error occurred during registration'); // Show error using toast
         } finally {
             setLoading(false);
         }
@@ -45,6 +47,7 @@ const Register: React.FC = () => {
     
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center p-4 relative overflow-hidden">
+            <Toaster position="top-center" />
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
                 <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-2000"></div>

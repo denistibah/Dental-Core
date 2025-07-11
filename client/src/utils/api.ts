@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { User, Patient, Appointment } from '../types';
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase/firebase';
+import { firebaseAuth } from '../firebase/firebase';
 
 const API_URL = 'https://localhost:5001/api'; // Replace with your actual API URL
 const API = axios.create({
@@ -117,7 +117,7 @@ export const setCurrentUser = async (user: User | null) => {
 
 export const loginUser = async (email: string, password: string) => {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
         const token = await userCredential.user.getIdToken();
         const response = await API.post('/auth/login', {
             token

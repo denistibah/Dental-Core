@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Import Link
+import { Toaster, toast } from 'react-hot-toast';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -27,21 +28,23 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const result: any = await login(email, password);
-      if (result.error) {
-        setError('Invalid email or password');
-      } else {
-        alert('Login successful!');
-      }
+        const result: any = await login(email, password);
+        if (result.error) {
+            toast.error('Invalid email or password'); // Show error message
+        } else {
+          toast.success('Login Successfully'); // Show success message
+          alert('Login Successfully'); // Optional alert
+        }
     } catch (err) {
-      setError('An error occurred during login');
+        toast.error('An error occurred during login'); // Handle unexpected errors
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center p-4 relative overflow-hidden">
+      <Toaster />
       {/* Other content */}
       <div className="max-w-md w-full space-y-8 relative z-10">
         {/* Header */}

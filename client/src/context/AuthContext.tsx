@@ -2,7 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, AuthContextType } from '../types';
 import { getUsers, getCurrentUser, setCurrentUser, saveUsers } from '../utils/storage';
 import { registerUser, loginUser } from '../utils/api';
-import { error } from 'console';
+
+import { signOut} from 'firebase/auth';
+import { firebaseAuth } from '../firebase/firebase'; // Adjust the import path as necessary
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -47,7 +49,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Register logic with API
-  // Register logic with API
   const register = async (email: string, password: string, role: string): Promise<{ error: boolean; msg: string }> => {
     try {
       const response = await registerUser(email, password, role);
@@ -64,7 +65,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Logout logic
-  const logout = () => {
+  const logout = async () => {
+    await signOut(firebaseAuth); // Sign out the user using Firebase
     setUser(null);
     setIsAuthenticated(false);
     setCurrentUser(null);
