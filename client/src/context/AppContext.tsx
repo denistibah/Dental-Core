@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Patient, Appointment, AppContextType } from '../types';
-import { 
-  getPatients, 
-  savePatients, 
-  getAppointments, 
-  saveAppointments, 
+import {
+  getPatients,
+  savePatients,
+  getAppointments,
+  saveAppointments,
   generateId,
   initializeStorage
 } from '../utils/storage';
 
-import {savePatient} from "../utils/api";
+import { getPatientsFromAPI, savePatient } from "../utils/api";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -26,9 +26,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
-    initializeStorage();
-    setPatients(getPatients());
-    setAppointments(getAppointments());
+    const fetchData = async () => {
+      const patients = await getPatientsFromAPI();
+      initializeStorage();
+      setPatients(patients);
+      setAppointments(getAppointments());
+    };
+    fetchData();
   }, []);
 
   const addPatient = async (patientData: Omit<Patient, 'id'>) => {
@@ -38,7 +42,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     const response = await savePatient(newPatient);
-    
+
     const updatedPatients = [...patients, newPatient];
     setPatients(updatedPatients);
     savePatients(updatedPatients);

@@ -33,12 +33,6 @@ export const setCurrentUserToAPI = async (user: User | null) => {
     if (!response.ok) throw new Error('Failed to set current user');
 };
 
-// Patient API requests
-export const getPatientsFromAPI = async (): Promise<Patient[]> => {
-    const response = await fetch(`${API_URL}/patients`);
-    if (!response.ok) throw new Error('Failed to fetch patients');
-    return response.json();
-};
 
 export const savePatientsToAPI = async (patients: Patient[]) => {
     const response = await fetch(`${API_URL}/patients`, {
@@ -67,23 +61,6 @@ export const saveAppointmentsToAPI = async (appointments: Appointment[]) => {
         body: JSON.stringify(appointments),
     });
     if (!response.ok) throw new Error('Failed to save appointments');
-};
-
-export const initializeStorage = async () => {
-    try {
-        // Fetch data from the API
-        const users = await getUsersFromAPI();
-        const patients = await getPatientsFromAPI();
-        const appointments = await getAppointmentsFromAPI();
-
-        // Set the initial data in local storage or state management
-        // This might be used in the future for offline persistence or caching
-        // localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-        // localStorage.setItem(STORAGE_KEYS.PATIENTS, JSON.stringify(patients));
-        // localStorage.setItem(STORAGE_KEYS.INCIDENTS, JSON.stringify(appointments));
-    } catch (error) {
-        console.error('Error initializing storage:', error);
-    }
 };
 
 // User operations - replace with API
@@ -144,7 +121,7 @@ export const registerUser = async (email: string, password: string, role: string
 };
 
 // Patient operations - replace with API
-export const getPatients = async () => {
+export const getPatientsFromAPI = async () => {
     try {
         const response = await API.get('/patients');
         return response.data;
