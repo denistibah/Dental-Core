@@ -151,6 +151,17 @@ export const savePatient = async (patient: Patient) => {
     }
 };
 
+export const deletePatientFromAPI = async (id: string) => {
+    try {
+        const response = await API.delete(`/patients/${id}`);
+        const deletePatient = response.data; // Assuming the API returns the deleted patient data
+        return deletePatient; // Return the response data
+    } catch (error) {
+        console.error('Error deleting patient:', error);
+        throw error; // Pass the error to be handled by the caller
+    }
+};  
+
 // Appointment operations - replace with API
 export const getAppointments = async (): Promise<Appointment[]> => {
     try {

@@ -9,7 +9,7 @@ export interface User {
 export interface Patient {
   id: string;
   name: string;
-  dob: string;
+  // dob: string;
   contact: string;
   notes: string;
   email?: string;
@@ -49,7 +49,7 @@ export interface AppContextType {
   appointments: Appointment[];
   addPatient: (patient: Omit<Patient, 'id'>) => void;
   updatePatient: (id: string, patient: Partial<Patient>) => void;
-  deletePatient: (id: string) => void;
+  deletePatient: (id: string) => Boolean | Promise<Boolean>;
   addAppointment: (appointment: Omit<Appointment, 'id'>) => void;
   updateAppointment: (id: string, appointment: Partial<Appointment>) => void;
   deleteAppointment: (id: string) => void;

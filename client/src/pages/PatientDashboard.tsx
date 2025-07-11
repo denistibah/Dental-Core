@@ -117,7 +117,7 @@ const PatientDashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="flex items-center space-x-3">
+          {/* <div className="flex items-center space-x-3">
             <div className="p-2 bg-blue-100 rounded-lg">
               <User size={16} className="text-blue-600" />
             </div>
@@ -125,7 +125,7 @@ const PatientDashboard: React.FC = () => {
               <p className="text-sm text-gray-500">Date of Birth</p>
               <p className="font-medium">{format(new Date(patient.dob), 'MMM d, yyyy')}</p>
             </div>
-          </div>
+          </div> */}
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-green-100 rounded-lg">
               <Phone size={16} className="text-green-600" />

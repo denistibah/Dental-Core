@@ -2,10 +2,10 @@ const prisma = require('../prisma/client');
 
 exports.createPatient = async (req, res) => {
   try {
-    const { name, dob, notes, email, contact } = req.body;
+    const { name, notes, email, contact } = req.body;
 
     const patient = await prisma.patient.create({
-      data: { name, dob: new Date(dob), notes, email, contact },
+      data: { name, notes, email, contact },
     });
 
     // console.log(patient);
@@ -27,7 +27,6 @@ exports.getPatients = async (req, res) => {
 
 exports.updatePatient = async (req, res) => {
   try {
-    req.body.dob = new Date(req.body.dob); // Ensure dob is a Date object
     const updatePatient = await prisma.patient.update({
       where: { id: req.params.id },
       data: req.body,
@@ -40,8 +39,8 @@ exports.updatePatient = async (req, res) => {
 
 exports.deletePatient = async (req, res) => {
   try {
-    await prisma.patient.delete({ where: { id: req.params.id } });
-    res.json({ message: 'Deleted successfully' });
+    const response = await prisma.patient.delete({ where: { id: req.params.id } });
+    return res.status(200).json({ deletePatient: response.data });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

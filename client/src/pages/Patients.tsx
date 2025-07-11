@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  User, 
-  Phone, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  User,
+  Phone,
   Mail,
   Heart,
   Calendar,
   X
 } from 'lucide-react';
 import { Patient } from '../types';
-import { format } from 'date-fns';
+import { Toaster, toast } from 'react-hot-toast';
 
 const Patients: React.FC = () => {
   const { patients, appointments, addPatient, updatePatient, deletePatient } = useApp();
@@ -22,7 +22,7 @@ const Patients: React.FC = () => {
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    dob: '',
+    // dob: '',
     contact: '',
     notes: '',
     email: ''
@@ -47,7 +47,7 @@ const Patients: React.FC = () => {
   const resetForm = () => {
     setFormData({
       name: '',
-      dob: '',
+      // dob: '',
       contact: '',
       notes: '',
       email: ''
@@ -60,7 +60,7 @@ const Patients: React.FC = () => {
     setEditingPatient(patient);
     setFormData({
       name: patient.name,
-      dob: patient.dob,
+      // dob: patient.dob,
       contact: patient.contact,
       notes: patient.notes,
       email: patient.email || ''
@@ -68,15 +68,25 @@ const Patients: React.FC = () => {
     setShowModal(true);
   };
 
-  const handleDelete = (patientId: string) => {
+  const handleDelete = async (patientId: string) => {
     const patientAppointments = appointments.filter(appointment => appointment.patientId === patientId);
     if (patientAppointments.length > 0) {
       if (window.confirm('This patient has appointments. Are you sure you want to delete this patient? All associated appointments will also be deleted.')) {
-        deletePatient(patientId);
+        const success = await deletePatient(patientId);
+        if (success) {
+          toast.success('Patient and associated appointments deleted successfully');
+        } else {
+          toast.error('Failed to delete patient. Please try again.');
+        }
       }
     } else {
       if (window.confirm('Are you sure you want to delete this patient?')) {
-        deletePatient(patientId);
+        const success = await deletePatient(patientId);
+        if (success) {
+          toast.success('Patient deleted successfully');
+        } else {
+          toast.error('Failed to delete patient. Please try again.');
+        }
       }
     }
   };
@@ -84,18 +94,19 @@ const Patients: React.FC = () => {
   const getPatientStats = (patientId: string) => {
     const patientAppointments = appointments.filter(appointment => appointment.patientId === patientId);
     const completed = patientAppointments.filter(appointment => appointment.status === 'Completed').length;
-    const upcoming = patientAppointments.filter(appointment => 
+    const upcoming = patientAppointments.filter(appointment =>
       appointment.status === 'Scheduled' && new Date(appointment.appointmentDate) > new Date()
     ).length;
     const totalSpent = patientAppointments
       .filter(appointment => appointment.cost && appointment.status === 'Completed')
       .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
-    
+
     return { completed, upcoming, totalSpent };
   };
 
   return (
     <div className="space-y-6">
+      <Toaster />
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -138,9 +149,9 @@ const Patients: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">{patient.name}</h3>
-                    <p className="text-sm text-gray-500">
+                    {/* <p className="text-sm text-gray-500">
                       Age: {new Date().getFullYear() - new Date(patient.dob).getFullYear()}
-                    </p>
+                    </p> */}
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -160,7 +171,7 @@ const Patients: React.FC = () => {
               </div>
 
               {/* Contact Info */}
-              <div className="space-y-2 mb-4">
+              <div className="space-y-2 mb-2">
                 {patient.email && (
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Mail size={14} />
@@ -171,18 +182,18 @@ const Patients: React.FC = () => {
                   <Phone size={14} />
                   <span>{patient.contact}</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                {/* <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Calendar size={14} />
                   <span>DOB: {format(new Date(patient.dob), 'MMM d, yyyy')}</span>
-                </div>
+                </div> */}
               </div>
 
               {/* Health Info */}
-              <div className="mb-4">
+              <div className="mb-2">
                 <div className="flex items-start space-x-2">
                   <Heart size={14} className="text-red-500 mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Notes</p>
+                    <p className="text-xs text-gray-500 mb-2">Notes</p>
                     <p className="text-sm text-gray-700">{patient.notes}</p>
                   </div>
                 </div>
@@ -250,7 +261,7 @@ const Patients: React.FC = () => {
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Date of Birth *
                 </label>
@@ -261,7 +272,7 @@ const Patients: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

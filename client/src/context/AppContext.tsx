@@ -9,7 +9,7 @@ import {
   initializeStorage
 } from '../utils/storage';
 
-import { getPatientsFromAPI, savePatient, updatePatientFromAPI } from "../utils/api";
+import { getPatientsFromAPI, savePatient, updatePatientFromAPI, deletePatientFromAPI } from "../utils/api";
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -42,10 +42,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     const response = await savePatient(newPatient);
-
-    const updatedPatients = [...patients, newPatient];
+    const updatedPatients = [...patients, response.data];
     setPatients(updatedPatients);
-    savePatients(updatedPatients);
   };
 
   const updatePatient = async (id: string, patientData: Partial<Patient>) => {
@@ -54,16 +52,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       patient.id === id ? { ...patient, ...updatePatient } : patient
     );
     setPatients(updatedPatients);
-    savePatients(updatedPatients);
   };
 
-  const deletePatient = (id: string) => {
-    const updatedPatients = patients.filter(patient => patient.id !== id);
-    const updatedAppointments = appointments.filter(appointment => appointment.patientId !== id);
-    setPatients(updatedPatients);
-    setAppointments(updatedAppointments);
-    savePatients(updatedPatients);
-    saveAppointments(updatedAppointments);
+  const deletePatient = async (id: string): Promise<Boolean> => {
+    try {
+      await deletePatientFromAPI(id);
+      const updatedPatients = patients.filter(patient => patient.id !== id);
+      setPatients(updatedPatients);
+      return true;
+    } catch (error) {
+      return false; // Handle error appropriately
+    }
   };
 
   const addAppointment = (appointmentData: Omit<Appointment, 'id'>) => {
