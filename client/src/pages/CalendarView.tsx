@@ -265,13 +265,6 @@ const CalendarView: React.FC = () => {
                         </div>
                         
                         <p className="text-sm mb-2">{appointment.description}</p>
-                        
-                        {appointment.cost && (
-                          <div className="flex items-center text-sm">
-                            <DollarSign size={14} className="mr-1" />
-                            <span>${appointment.cost}</span>
-                          </div>
-                        )}
                       </div>
                     );
                   })}
@@ -310,17 +303,6 @@ const CalendarView: React.FC = () => {
                 <span className="font-semibold text-yellow-600">
                   {monthlyAppointments.filter(a => a.status === 'In Progress').length}
                 </span>
-              </div>
-              
-              <div className="border-t border-gray-200 pt-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Monthly Revenue</span>
-                  <span className="font-semibold text-green-600">
-                    ${monthlyAppointments
-                      .filter(a => a.cost && a.status === 'Completed')
-                      .reduce((sum, a) => sum + (a.cost || 0), 0)}
-                  </span>
-                </div>
               </div>
             </div>
           </div>

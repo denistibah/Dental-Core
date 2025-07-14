@@ -46,21 +46,6 @@ const Dashboard: React.FC = () => {
     const pendingTreatments = appointments.filter(appointment => appointment.status === 'Scheduled').length;
     const inProgressTreatments = appointments.filter(appointment => appointment.status === 'In Progress').length;
 
-    // Revenue calculation
-    const totalRevenue = appointments
-      .filter(appointment => appointment.cost && appointment.status === 'Completed')
-      .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
-
-    const monthlyRevenue = appointments
-      .filter(appointment => {
-        if (!appointment.cost || appointment.status !== 'Completed') return false;
-        const appointmentDate = new Date(appointment.appointmentDate);
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
-        return appointmentDate.getMonth() === currentMonth && appointmentDate.getFullYear() === currentYear;
-      })
-      .reduce((sum, appointment) => sum + (appointment.cost || 0), 0);
-
     // Top patients (by number of appointments)
     const patientAppointmentCount = patients.map(patient => {
       const appointmentCount = appointments.filter(appointment => appointment.patientId === patient.id).length;
@@ -76,8 +61,6 @@ const Dashboard: React.FC = () => {
       completedTreatments,
       pendingTreatments,
       inProgressTreatments,
-      totalRevenue,
-      monthlyRevenue,
       patientAppointmentCount
     };
   }, [patients, appointments]);

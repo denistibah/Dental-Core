@@ -40,35 +40,24 @@ export const mockAppointments: Appointment[] = [
     patientId: "p1",
     title: "Toothache",
     description: "Upper molar pain",
-    comments: "Sensitive to cold",
     appointmentDate: "2025-07-10T10:00:00",
-    cost: 80,
-    treatment: "Root canal treatment",
     status: "Completed",
-    nextDate: "2025-08-10T10:00:00",
-    files: []
   },
   {
     id: "i2",
     patientId: "p2",
     title: "Dental Cleaning",
     description: "Regular dental cleaning",
-    comments: "Good oral hygiene",
     appointmentDate: "2025-07-12T14:00:00",
-    cost: 120,
-    treatment: "Professional cleaning",
     status: "Scheduled",
-    files: []
   },
   {
     id: "i3",
     patientId: "p1",
     title: "Follow-up",
     description: "Post-treatment checkup",
-    comments: "Monitor healing progress",
     appointmentDate: "2025-07-15T09:00:00",
     status: "Scheduled",
-    files: []
   }
 ];
 

@@ -4,9 +4,11 @@ import { User, Patient, Appointment } from '../types';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase/firebase';
 
-const API_URL = 'https://localhost:5001/api'; // Replace with your actual API URL
+const API_URL = process.env.REACT_APP_API_BASE_URL!; // "!" tells TypeScript it's definitely defined
+console.log('API URL:', API_URL); // Log the API URL for debugging
+
 const API = axios.create({
-    baseURL: 'http://localhost:5001/api', // update if deployed
+    baseURL: API_URL,
 });
 
 // Add an interceptor to set the token in the headers
@@ -105,3 +107,14 @@ export const deletePatientFromAPI = async (id: string) => {
         throw error; // Pass the error to be handled by the caller
     }
 };  
+
+export const addAppointmentFromAPI = async (appointment: Appointment) => {
+    try {
+        console.log('Adding appointment:', appointment);
+        const response = await API.post('/appointments', appointment);
+        return response.data; // Return the added appointment data
+    } catch (error) {
+        console.error('Error adding appointment:', error);
+        throw error; // Pass the error to be handled by the caller
+    }
+}

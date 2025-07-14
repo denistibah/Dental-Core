@@ -27,13 +27,13 @@ export interface Appointment {
   patientId: string;
   title: string;
   description: string;
-  comments: string;
+  // comments: string;
   appointmentDate: string;
-  cost?: number;
-  treatment?: string;
+  // cost?: number;
+  // treatment?: string;
   status: 'Scheduled' | 'In Progress' | 'Completed' | 'Cancelled';
-  nextDate?: string;
-  files: FileAttachment[];
+  // nextDate?: string;
+  // files: FileAttachment[];
 }
 
 export interface AuthContextType {

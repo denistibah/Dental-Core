@@ -29,12 +29,8 @@ const Appointments: React.FC = () => {
     patientId: '',
     title: '',
     description: '',
-    comments: '',
     appointmentDate: '',
-    cost: '',
-    treatment: '',
     status: 'Scheduled' as Appointment['status'],
-    nextDate: ''
   });
 
   const filteredAppointments = appointments.filter(appointment => {
@@ -51,9 +47,7 @@ const Appointments: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const appointmentData = {
-      ...formData,
-      cost: formData.cost ? parseFloat(formData.cost) : undefined,
-      files: uploadingFiles
+      ...formData
     };
 
     if (editingAppointment) {
@@ -69,12 +63,8 @@ const Appointments: React.FC = () => {
       patientId: '',
       title: '',
       description: '',
-      comments: '',
       appointmentDate: '',
-      cost: '',
-      treatment: '',
       status: 'Scheduled',
-      nextDate: ''
     });
     setUploadingFiles([]);
     setEditingAppointment(null);
@@ -87,14 +77,9 @@ const Appointments: React.FC = () => {
       patientId: appointment.patientId,
       title: appointment.title,
       description: appointment.description,
-      comments: appointment.comments,
       appointmentDate: appointment.appointmentDate.slice(0, 16),
-      cost: appointment.cost?.toString() || '',
-      treatment: appointment.treatment || '',
       status: appointment.status,
-      nextDate: appointment.nextDate ? appointment.nextDate.slice(0, 16) : ''
     });
-    setUploadingFiles(appointment.files || []);
     setShowModal(true);
   };
 
@@ -104,28 +89,28 @@ const Appointments: React.FC = () => {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = Array.from(e.target.files || []);
 
-    for (const file of files) {
-      try {
-        const base64 = await convertFileToBase64(file);
-        const fileAttachment: FileAttachment = {
-          name: file.name,
-          url: base64,
-          type: file.type,
-          size: file.size
-        };
-        setUploadingFiles(prev => [...prev, fileAttachment]);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    }
-  };
+  //   for (const file of files) {
+  //     try {
+  //       const base64 = await convertFileToBase64(file);
+  //       const fileAttachment: FileAttachment = {
+  //         name: file.name,
+  //         url: base64,
+  //         type: file.type,
+  //         size: file.size
+  //       };
+  //       setUploadingFiles(prev => [...prev, fileAttachment]);
+  //     } catch (error) {
+  //       console.error('Error uploading file:', error);
+  //     }
+  //   }
+  // };
 
-  const removeFile = (index: number) => {
-    setUploadingFiles(prev => prev.filter((_, i) => i !== index));
-  };
+  // const removeFile = (index: number) => {
+  //   setUploadingFiles(prev => prev.filter((_, i) => i !== index));
+  // };
 
   const downloadFile = (file: FileAttachment) => {
     const link = document.createElement('a');
@@ -224,12 +209,6 @@ const Appointments: React.FC = () => {
                           <Clock size={16} />
                           <span>{format(new Date(appointment.appointmentDate), 'h:mm a')}</span>
                         </div>
-                        {appointment.cost && (
-                          <div className="flex items-center space-x-1">
-                            <DollarSign size={16} />
-                            <span>${appointment.cost}</span>
-                          </div>
-                        )}
                       </div>
                     </div>
                     <div className="flex space-x-2">
@@ -253,46 +232,7 @@ const Appointments: React.FC = () => {
                       <p className="text-sm font-medium text-gray-700 mb-1">Description</p>
                       <p className="text-sm text-gray-600">{appointment.description}</p>
                     </div>
-                    {appointment.comments && (
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 mb-1">Comments</p>
-                        <p className="text-sm text-gray-600">{appointment.comments}</p>
-                      </div>
-                    )}
-                    {appointment.treatment && (
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 mb-1">Treatment</p>
-                        <p className="text-sm text-gray-600">{appointment.treatment}</p>
-                      </div>
-                    )}
-                    {appointment.nextDate && (
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 mb-1">Next Appointment</p>
-                        <p className="text-sm text-gray-600">
-                          {format(new Date(appointment.nextDate), 'MMM d, yyyy h:mm a')}
-                        </p>
-                      </div>
-                    )}
                   </div>
-
-                  {appointment.files && appointment.files.length > 0 && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700 mb-2">Attachments</p>
-                      <div className="flex flex-wrap gap-2">
-                        {appointment.files.map((file, index) => (
-                          <button
-                            key={index}
-                            onClick={() => downloadFile(file)}
-                            className="flex items-center space-x-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm hover:bg-gray-100 transition-colors"
-                          >
-                            <FileText size={16} />
-                            <span>{file.name}</span>
-                            <Download size={14} />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
