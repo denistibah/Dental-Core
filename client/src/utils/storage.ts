@@ -32,30 +32,30 @@ export const mockPatients: Patient[] = [
 ];
 
 export const mockAppointments: Appointment[] = [
-  {
-    id: "i1",
-    patientId: "p1",
-    title: "Toothache",
-    description: "Upper molar pain",
-    appointmentDate: "2025-07-10T10:00:00",
-    status: "Completed",
-  },
-  {
-    id: "i2",
-    patientId: "p2",
-    title: "Dental Cleaning",
-    description: "Regular dental cleaning",
-    appointmentDate: "2025-07-12T14:00:00",
-    status: "Scheduled",
-  },
-  {
-    id: "i3",
-    patientId: "p1",
-    title: "Follow-up",
-    description: "Post-treatment checkup",
-    appointmentDate: "2025-07-15T09:00:00",
-    status: "Scheduled",
-  }
+  // {
+  //   id: "i1",
+  //   patientId: "p1",
+  //   title: "Toothache",
+  //   description: "Upper molar pain",
+  //   appointmentDate: "2025-07-10T10:00:00",
+  //   status: "Completed",
+  // },
+  // {
+  //   id: "i2",
+  //   patientId: "p2",
+  //   title: "Dental Cleaning",
+  //   description: "Regular dental cleaning",
+  //   appointmentDate: "2025-07-12T14:00:00",
+  //   status: "Scheduled",
+  // },
+  // {
+  //   id: "i3",
+  //   patientId: "p1",
+  //   title: "Follow-up",
+  //   description: "Post-treatment checkup",
+  //   appointmentDate: "2025-07-15T09:00:00",
+  //   status: "Scheduled",
+  // }
 ];
 
 const STORAGE_KEYS = {
