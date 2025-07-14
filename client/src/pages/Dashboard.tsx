@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { statusColorClasses } from '../utils/status';
 import { useApp } from '../context/AppContext';
 import { format, isAfter, isBefore, addDays } from 'date-fns';
-import { 
-  Users, 
-  Calendar, 
-  DollarSign, 
-  CheckCircle, 
+import {
+  Users,
+  Calendar,
+  DollarSign,
+  CheckCircle,
   Clock,
   TrendingUp,
   Activity,
@@ -54,8 +55,8 @@ const Dashboard: React.FC = () => {
       const appointmentCount = appointments.filter(appointment => appointment.patientId === patient.id).length;
       return { ...patient, appointmentCount };
     })
-    .sort((a, b) => b.appointmentCount - a.appointmentCount)
-    .slice(0, 5);
+      .sort((a, b) => b.appointmentCount - a.appointmentCount)
+      .slice(0, 5);
 
     return {
       upcomingAppointments,
@@ -249,18 +250,20 @@ const Dashboard: React.FC = () => {
               {dashboardData.todayAppointments.map((appointment) => {
                 const patient = patients.find(p => p.id === appointment.patientId);
                 return (
-                  <div 
+                  <div
                     key={appointment.id}
                     className="p-4 border border-gray-200 rounded-lg cursor-pointer hover:shadow-md transition-shadow"
                     onClick={() => navigate('/appointments', { state: { editId: appointment.id } })}
-                    >
+                  >
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-medium text-gray-900">{patient?.name}</h4>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        appointment.status === 'Scheduled' ? 'bg-blue-100 text-blue-800' :
-                        appointment.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
+                      {/* … inside your map: */}
+                      <span
+                        className={`
+                        px-2 py-1 rounded-full text-xs font-medium
+                        ${statusColorClasses[appointment.status]}
+                      `}
+                      >
                         {appointment.status}
                       </span>
                     </div>
