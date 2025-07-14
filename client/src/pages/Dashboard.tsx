@@ -242,7 +242,7 @@ const Dashboard: React.FC = () => {
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center">
               <AlertCircle className="mr-2" size={20} />
-              This Week's Schedule
+              This Today's Schedule
             </h3>
           </div>
           <div className="p-6">
