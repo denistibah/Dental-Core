@@ -5,7 +5,6 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase/firebase';
 
 const API_URL = process.env.REACT_APP_API_BASE_URL!; // "!" tells TypeScript it's definitely defined
-console.log('API URL:', API_URL); // Log the API URL for debugging
 
 const API = axios.create({
     baseURL: API_URL,
