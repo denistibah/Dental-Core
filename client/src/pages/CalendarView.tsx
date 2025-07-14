@@ -2,9 +2,9 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 import Calendar from 'react-calendar';
 import { format, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
-import { 
+import {
   Calendar as CalendarIcon,
-  ChevronLeft, 
+  ChevronLeft,
   ChevronRight,
   Clock,
   User,
@@ -19,7 +19,7 @@ const CalendarView: React.FC = () => {
 
   // Get appointments for a specific date
   const getAppointmentsForDate = useCallback((date: Date) => {
-    return appointments.filter(appointment => 
+    return appointments.filter(appointment =>
       isSameDay(new Date(appointment.appointmentDate), date)
     );
   }, [appointments]);
@@ -33,7 +33,7 @@ const CalendarView: React.FC = () => {
   const monthlyAppointments = useMemo(() => {
     const start = startOfMonth(selectedDate);
     const end = endOfMonth(selectedDate);
-    
+
     return appointments.filter(appointment => {
       const appointmentDate = new Date(appointment.appointmentDate);
       return appointmentDate >= start && appointmentDate <= end;
@@ -87,11 +87,11 @@ const CalendarView: React.FC = () => {
   // Weekly view data
   const weeklyData = useMemo(() => {
     if (view !== 'week') return [];
-    
+
     const startOfWeek = new Date(selectedDate);
     const dayOfWeek = startOfWeek.getDay();
     startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek);
-    
+
     return eachDayOfInterval({
       start: startOfWeek,
       end: new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000)
@@ -112,21 +112,19 @@ const CalendarView: React.FC = () => {
         <div className="flex space-x-2">
           <button
             onClick={() => setView('month')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              view === 'month'
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${view === 'month'
                 ? 'bg-primary-600 text-white'
                 : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-            }`}
+              }`}
           >
             Month
           </button>
           <button
             onClick={() => setView('week')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-              view === 'week'
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${view === 'week'
                 ? 'bg-primary-600 text-white'
                 : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-            }`}
+              }`}
           >
             Week
           </button>
@@ -180,20 +178,19 @@ const CalendarView: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-7 gap-2">
                   {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                     <div key={day} className="text-center text-sm font-medium text-gray-500 pb-2">
                       {day}
                     </div>
                   ))}
-                  
+
                   {weeklyData.map(({ date, appointments }) => (
-                    <div 
-                      key={date.toISOString()} 
-                      className={`border border-gray-200 rounded-lg p-2 min-h-[120px] cursor-pointer transition-colors ${
-                        isSameDay(date, selectedDate) ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'
-                      }`}
+                    <div
+                      key={date.toISOString()}
+                      className={`border border-gray-200 rounded-lg p-2 min-h-[120px] cursor-pointer transition-colors ${isSameDay(date, selectedDate) ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'
+                        }`}
                       onClick={() => setSelectedDate(date)}
                     >
                       <div className="text-sm font-medium text-gray-900 mb-1">
@@ -203,13 +200,13 @@ const CalendarView: React.FC = () => {
                         {appointments.slice(0, 3).map((appointment, index) => {
                           const patient = patients.find(p => p.id === appointment.patientId);
                           return (
-                            <div 
+                            <div
                               key={index}
                               className={`text-xs p-1 rounded border ${getStatusColor(appointment.status)}`}
                             >
                               <div className="font-medium truncate">{appointment.title}</div>
                               <div className="truncate">{patient?.name}</div>
-                              <div>{format(new Date(appointment.appointmentDate), 'HH:mm')}</div>
+                              <div>{format(new Date(appointment.appointmentDate), 'h:mm a')}</div>
                             </div>
                           );
                         })}
@@ -235,7 +232,7 @@ const CalendarView: React.FC = () => {
               <CalendarIcon size={20} className="mr-2" />
               {format(selectedDate, 'EEEE, MMMM d, yyyy')}
             </h3>
-            
+
             {selectedDateAppointments.length === 0 ? (
               <p className="text-gray-500 text-center py-8">
                 No appointments scheduled for this date
@@ -247,23 +244,23 @@ const CalendarView: React.FC = () => {
                   .map((appointment) => {
                     const patient = patients.find(p => p.id === appointment.patientId);
                     return (
-                      <div 
+                      <div
                         key={appointment.id}
                         className={`p-4 rounded-lg border ${getStatusColor(appointment.status)}`}
                       >
                         <div className="flex justify-between items-start mb-2">
                           <h4 className="font-medium">{appointment.title}</h4>
-                          <div className="flex items-center text-sm">
+                          <div className="flex items-center text-sm mb-2">
                             <Clock size={14} className="mr-1" />
-                            {format(new Date(appointment.appointmentDate), 'HH:mm')}
+                            {format(new Date(appointment.appointmentDate), 'h:mm a')}
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center text-sm mb-2">
                           <User size={14} className="mr-1" />
                           <span>{patient?.name}</span>
                         </div>
-                        
+
                         <p className="text-sm mb-2">{appointment.description}</p>
                       </div>
                     );
@@ -277,27 +274,27 @@ const CalendarView: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               {format(selectedDate, 'MMMM yyyy')} Summary
             </h3>
-            
+
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Total Appointments</span>
                 <span className="font-semibold">{monthlyAppointments.length}</span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Completed</span>
                 <span className="font-semibold text-green-600">
                   {monthlyAppointments.filter(a => a.status === 'Completed').length}
                 </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Scheduled</span>
                 <span className="font-semibold text-blue-600">
                   {monthlyAppointments.filter(a => a.status === 'Scheduled').length}
                 </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">In Progress</span>
                 <span className="font-semibold text-yellow-600">
