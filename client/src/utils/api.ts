@@ -4,7 +4,8 @@ import { User, Patient, Appointment } from '../types';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase/firebase';
 
-const API_URL = "https://dental-backend-y8kz.onrender.com/api"; // "!" tells TypeScript it's definitely defined
+// const API_URL = "https://dental-backend-y8kz.onrender.com/api"; // "!" tells TypeScript it's definitely defined
+const API_URL = "http://localhost:5001/api"; // "!" tells TypeScript it's definitely defined
 
 export const API = axios.create({
     baseURL: API_URL,
@@ -79,7 +80,6 @@ export const loginUserFromAPI = async (email: string, password: string) => {
 export const updatePatientFromAPI = async (id: string, patientData: Partial<Patient>) => {
     try {
         const response = await API.put(`/patients/${id}`, patientData);
-        debugger;
         return response.data; // Return the updated patient data
     } catch (error) {
         console.error('Error fetching patients:', error);
