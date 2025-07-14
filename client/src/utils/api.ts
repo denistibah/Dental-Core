@@ -4,11 +4,12 @@ import { User, Patient, Appointment } from '../types';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase/firebase';
 
-const API_URL = process.env.REACT_APP_API_BASE_URL!; // "!" tells TypeScript it's definitely defined
+const API_URL = "http://localhost:5001/api"; // "!" tells TypeScript it's definitely defined
 
 const API = axios.create({
     baseURL: API_URL,
 });
+
 
 // Add an interceptor to set the token in the headers
 API.interceptors.request.use(

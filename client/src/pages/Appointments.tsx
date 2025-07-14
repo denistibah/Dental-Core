@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   Plus,
@@ -20,6 +22,9 @@ import { convertFileToBase64 } from '../utils/storage';
 
 const Appointments: React.FC = () => {
   const { patients, appointments, addAppointment, updateAppointment, deleteAppointment } = useApp();
+  const location = useLocation();
+  const { editId } = (location.state ?? {}) as { editId?: string };
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
@@ -32,6 +37,18 @@ const Appointments: React.FC = () => {
     appointmentDate: '',
     status: 'Scheduled' as Appointment['status'],
   });
+
+  // new effect:
+  useEffect(() => {
+    if (editId) {
+      const appt = appointments.find(a => a.id === location.state.editId);
+      if (appt) {
+        handleEdit(appt);
+        // clear state so re-navigation doesn’t re-open modal
+        navigate(location.pathname, { replace: true, state: {} });
+      }
+    }
+  }, [location.state, appointments]);
 
   const filteredAppointments = appointments.filter(appointment => {
     const patient = patients.find(p => p.id === appointment.patientId);
@@ -358,7 +375,7 @@ const Appointments: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                 </div>
-{/* 
+                {/* 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Next Appointment (Optional)
