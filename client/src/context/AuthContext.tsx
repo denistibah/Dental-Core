@@ -22,12 +22,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubscribe = onIdTokenChanged(firebaseAuth, async fbUser => {
       if (fbUser) {
         const token = await fbUser.getIdToken()
+       
         localStorage.setItem('token', token)
         API.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
         try {
+         
           const resp = await fetchMeAPI()
-          setUser({ ...resp.data, email: fbUser.email!, password: '' })
+         
+          console.log('Fetched profile:', resp)
+
+          setUser({ ...resp.data, email: fbUser.email! })
           setIsAuthenticated(true)
         } catch (err) {
           console.error('Failed to fetch profile:', err)
@@ -53,12 +58,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const cred = await createUserWithEmailAndPassword(firebaseAuth, email, password)
+      
       const token = await cred.user.getIdToken()
       localStorage.setItem('token', token)
       API.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      
 
       // now tell your backend about firstName/lastName/role
-      await registerAPI({ firstName, lastName, role })
+      const result = await registerAPI({ firstName, lastName, role })
 
       return { success: true }
     } catch (err: any) {

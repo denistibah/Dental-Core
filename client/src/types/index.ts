@@ -2,7 +2,8 @@ export interface User {
   id: string;
   role: string;
   email: string;
-  password: string;
+  firstName?: string;
+  lastName?: string;
   patientId?: string;
 }
 

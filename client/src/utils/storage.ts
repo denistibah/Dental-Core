@@ -2,9 +2,6 @@ import { User, Patient, Appointment } from '../types';
 
 // Mock data
 export const mockUsers: User[] = [
-  { id: "1", role: "Student", email: "admin@entnt.in", password: "admin123" },
-  { id: "2", role: "Professor", email: "john@entnt.in", password: "patient123", patientId: "p1" },
-  { id: "3", role: "Professor", email: "jane@entnt.in", password: "patient123", patientId: "p2" }
 ];
 
 export const mockPatients: Patient[] = [
