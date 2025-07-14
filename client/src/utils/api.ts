@@ -1,29 +1,54 @@
 // api.ts
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { User, Patient, Appointment } from '../types';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase/firebase';
 
-const API_URL = "http://localhost:5001/api"; // "!" tells TypeScript it's definitely defined
+// Pull the base URL from your .env
+const API_URL =
+    'http://localhost:5001/api';
 
-const API = axios.create({
+export const API = axios.create({
     baseURL: API_URL,
 });
 
-
-// Add an interceptor to set the token in the headers
-API.interceptors.request.use(
-    async (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`; // Set the token in the Authorization header
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error); // Handle errors
+// Automatically attach the Firebase ID token from localStorage
+API.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
+    return config;
+});
+
+export interface RegisterPayload {
+    firstName: string
+    lastName: string
+    role: string
+}
+
+
+// Auth endpoints
+
+export const registerAPI = (data: RegisterPayload): Promise<AxiosResponse> => {
+    return API.post('/auth/register', data)
+}
+
+// Fetch the “me” endpoint (your DB profile)
+export const fetchMeAPI = (): Promise<AxiosResponse> => {
+    return API.get('/users/me')
+}
+
+// Patient operations - replace with API
+export const getPatientsFromAPI = async () => {
+    try {
+        const response = await API.get('/patients');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching patients:', error);
+        return []; // return empty array in case of an error
+    }
+};
 
 export const saveAppointmentsToAPI = async (appointments: Appointment[]) => {
     const response = await fetch(`${API_URL}/appointments`, {
@@ -51,31 +76,7 @@ export const loginUserFromAPI = async (email: string, password: string) => {
     }
 };
 
-// Register user function
-export const registerUser = async (email: string, password: string, role: string) => {
-    try {
 
-        const response = await API.post('/auth/register', {
-            email,
-            password,
-            role,
-        });
-        return response; // Returning the response for further use
-    } catch (error: any) {
-        throw error; // Pass the error to be handled by the caller
-    }
-};
-
-// Patient operations - replace with API
-export const getPatientsFromAPI = async () => {
-    try {
-        const response = await API.get('/patients');
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching patients:', error);
-        return []; // return empty array in case of an error
-    }
-};
 
 export const updatePatientFromAPI = async (id: string, patientData: Partial<Patient>) => {
     try {
@@ -106,7 +107,7 @@ export const deletePatientFromAPI = async (id: string) => {
         console.error('Error deleting patient:', error);
         throw error; // Pass the error to be handled by the caller
     }
-};  
+};
 
 export const addAppointmentFromAPI = async (appointment: Appointment) => {
     try {
