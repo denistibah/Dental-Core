@@ -57,7 +57,7 @@ const Login: React.FC = () => {
             </div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-blue-700 bg-clip-text text-transparent mb-2">
-            DentalCare DentalCare DentalCare
+            DentalCare
           </h1>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
             Sign in to DentalCare
