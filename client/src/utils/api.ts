@@ -4,9 +4,7 @@ import { User, Patient, Appointment } from '../types';
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { firebaseAuth } from '../firebase/firebase';
 
-// Pull the base URL from your .env
-const API_URL =
-    'http://localhost:5001/api';
+const API_URL = "https://dental-backend-y8kz.onrender.com/api"; // "!" tells TypeScript it's definitely defined
 
 export const API = axios.create({
     baseURL: API_URL,
