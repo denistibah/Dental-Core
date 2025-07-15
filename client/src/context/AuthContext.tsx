@@ -28,18 +28,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         try {
          
-          // const resp = await fetchMeAPI()
+          const resp = await fetchMeAPI()
          
-          // console.log('Fetched profile:', resp)
+          console.log('Fetched profile:', resp)
 
-          // setUser({ ...resp.data, email: fbUser.email! })
-          setUser({
-            id: fbUser.uid,
-            email: fbUser.email || '',
-            role: 'Student', // Default role, adjust as needed
-            firstName: '',
-            lastName: ''  
-          })
+          setUser({ ...resp.data, email: fbUser.email! })
+          // setUser({
+          //   id: fbUser.uid,
+          //   email: fbUser.email || '',
+          //   role: 'Student', // Default role, adjust as needed
+          //   firstName: '',
+          //   lastName: ''  
+          // })
           setIsAuthenticated(true)
         } catch (err) {
           console.error('Failed to fetch profile:', err)
@@ -65,16 +65,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const cred = await createUserWithEmailAndPassword(firebaseAuth, email, password)
-      
+  
       const token = await cred.user.getIdToken()
       localStorage.setItem('token', token)
       API.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      
-
-      // now tell your backend about firstName/lastName/role
-      const result = await registerAPI({ firstName, lastName, role })
-
-      return { success: true }
+  
+      try {
+        // Now tell your backend about firstName/lastName/role
+        await registerAPI({ firstName, lastName, role })
+        return { success: true }
+      } catch (apiError) {
+        // If API fails, delete Firebase account
+        await cred.user.delete()
+        console.error('Backend registration failed, Firebase account deleted:', apiError)
+        return { success: false, error: 'Failed to complete registration. Please try again.' }
+      }
+  
     } catch (err: any) {
       console.error('Registration failed:', err)
       let message = 'Registration failed. Please try again.'
@@ -91,6 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: message }
     }
   }
+  
 
   const login = async (email: string, password: string): Promise<void> => {
     await signInWithEmailAndPassword(firebaseAuth, email, password)
